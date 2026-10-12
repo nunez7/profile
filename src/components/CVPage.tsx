@@ -7,7 +7,7 @@ import Stack from "./Stack";
 import ExperienceTimeline from "./ExperienceTimeline";
 import Formacion from "./Formacion";
 import Footer from "./Footer";
-import { Section } from "./Section";
+import { Section } from "./ui/Section";
 
 export default function CVPage() {
   const { t } = useLang();
@@ -18,7 +18,7 @@ export default function CVPage() {
       <main className="flex-1">
         <Hero />
         <Section title={t.sections.summary}>
-          <p className="max-w-[500px] text-[17px] leading-[1.65]">{t.summary}</p>
+          <p className="max-w-[58ch] text-body">{t.summary}</p>
         </Section>
         <Stack />
         <ExperienceTimeline />

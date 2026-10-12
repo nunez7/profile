@@ -1,30 +1,106 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------
+   Tokens semánticos de color
+   Claro por defecto; .dark los sobreescribe. Los componentes solo
+   usan estos nombres — nunca hex ni escalas directas.
+------------------------------------------------------------------ */
+:root {
+  --background: #f5f7f8; /* papel frío de specs */
+  --surface: #ffffff;
+  --foreground: #0e1116; /* tinta */
+  --muted: #5a6472; /* grafito, texto secundario */
+  --rule: #dde3e9; /* hairlines, divisores */
+  --accent: #2c5fff; /* cobalto: único color de énfasis */
+  --accent-contrast: #f8fafc; /* texto sobre acento sólido */
+  --added: #15803d; /* git: «línea agregada» */
+  --removed: #b91c1c; /* git: «línea quitada» */
+
+  /* Curvas de easing fuertes (las default se sienten flojas) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0e1116;
+  --surface: #151a21;
+  --foreground: #eceff3;
+  --muted: #98a2b0;
+  --rule: #252d38;
+  --accent: #6e90ff; /* cobalto aclarado para contraste sobre fondo oscuro */
+  --accent-contrast: #0b0f14;
+  --added: #3fb950;
+  --removed: #f85149;
+  color-scheme: dark;
+}
+
 @theme {
-  --color-ink: #0e1116;
-  --color-paper: #f5f7f8;
-  --color-cobalt: #2c5fff;
-  --color-graphite: #5a6472;
-  --color-hairline: #dde3e9;
+  /* Token de layout: ancho de contenido del CV */
+  --container-cv: 1080px;
+
+  /* Escala tipográfica semántica */
+  --text-meta: 0.8125rem; /* 13px — datos de ingeniería en mono */
+  --text-meta--line-height: 1.5;
+  --text-detail: 0.9375rem; /* 15px — enlaces, listas, certs */
+  --text-detail--line-height: 1.6;
+  --text-body: 1.0625rem; /* 17px — párrafo de síntesis */
+  --text-body--line-height: 1.65;
+  --text-lead: 1.1875rem; /* 19px — rol, items de stack primarios */
+  --text-lead--line-height: 1.4;
 }
 
 @theme inline {
+  /* Capa semántica: los utilities consumen estas vars */
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-added: var(--added);
+  --color-removed: var(--removed);
   --font-sans: var(--font-archivo);
   --font-mono: var(--font-jetbrains);
 }
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   text-rendering: optimizeLegibility;
 }
 
-/* Foco visible consistente en toda la página */
+/* ------------------------------------------------------------------
+   Superficies del navegador: las partes que no dibujamos también
+   llevan el diseño (craft floor).
+------------------------------------------------------------------ */
+::selection {
+  background: color-mix(in oklab, var(--accent) 24%, transparent);
+}
+
 :focus-visible {
-  outline: 2px solid var(--color-cobalt);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+* {
+  scrollbar-color: var(--rule) transparent;
+  scrollbar-width: thin;
+}
+
+/* Patrón de clase: subtítulo de categoría (mono, muted).
+   Se aplica a h3/dt/etc. sin forzar el tag. */
+.subhead {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--text-meta);
+  line-height: var(--text-meta--line-height);
+  color: var(--muted);
 }
 
 /* Único momento de movimiento: el revelo de carga del hero */
@@ -40,12 +116,64 @@ body {
 }
 
 .animate-rise {
-  animation: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: rise 0.55s var(--ease-out) both;
+}
+
+/* Press-feedback: todo elemento presionable responde al tacto */
+.press {
+  transition: transform 160ms var(--ease-out);
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+/* Revelado por scroll: una sola vez, entra desde abajo */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Morph del icono de tema al conmutar */
+.theme-icon {
+  transition:
+    transform 300ms var(--ease-in-out),
+    opacity 200ms ease;
+}
+
+/* El glifo +/− del timeline rota al plegar/desplegar */
+.diff-glyph {
+  transition: transform 260ms var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-rise {
     animation: none;
+  }
+
+  .press,
+  .theme-icon,
+  .diff-glyph {
+    transition: none;
+  }
+
+  .press:active {
+    transform: none;
+  }
+
+  /* Reduced motion = menos movimiento, no cero: el fade ayuda a
+     comprender, el transform no. Se conserva solo la opacidad. */
+  .reveal {
+    transform: none;
+    transition: opacity 200ms ease;
   }
 }
 
@@ -57,6 +185,18 @@ body {
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  /* El PDF siempre sale en tema claro, venga del modo que venga */
+  .dark {
+    --background: #ffffff;
+    --surface: #ffffff;
+    --foreground: #0e1116;
+    --muted: #5a6472;
+    --rule: #dde3e9;
+    --accent: #2c5fff;
+    --accent-contrast: #ffffff;
+    color-scheme: light;
   }
 
   body {

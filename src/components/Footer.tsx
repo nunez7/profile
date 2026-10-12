@@ -1,6 +1,8 @@
 "use client";
 
 import { useLang } from "@/i18n/lang-context";
+import { Container } from "./ui/Container";
+import { TextLink } from "./ui/TextLink";
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/felix-nunezg";
 
@@ -32,28 +34,23 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="border-t border-hairline">
-      <div className="mx-auto w-full max-w-[1080px] px-6 py-12 md:px-10 md:py-16">
+    <footer className="border-t border-rule">
+      <Container className="py-12 md:py-16">
         <h2 className="text-[25px] font-semibold tracking-[-0.02em] md:text-[31px]">
           {t.sections.contact}
         </h2>
         <dl className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => (
-            <div key={item.label} className="border-t border-hairline pt-4">
-              <dt className="font-mono text-[13px] text-graphite">
-                {item.label}
-              </dt>
-              <dd className="mt-1 text-[15.5px] break-words">
+            <div key={item.label} className="border-t border-rule pt-4">
+              <dt className="subhead">{item.label}</dt>
+              <dd className="mt-1 text-detail break-words">
                 {item.href ? (
-                  <a
+                  <TextLink
                     href={item.href}
-                    {...(item.external
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
-                    className="underline decoration-hairline underline-offset-4 transition-colors hover:decoration-cobalt"
+                    {...(item.external ? { external: true } : {})}
                   >
                     {item.value}
-                  </a>
+                  </TextLink>
                 ) : (
                   item.value
                 )}
@@ -61,10 +58,10 @@ export default function Footer() {
             </div>
           ))}
         </dl>
-        <p className="mt-12 border-t border-hairline pt-6 font-mono text-[12px] text-graphite">
+        <p className="mt-12 border-t border-rule pt-6 font-mono text-meta text-muted">
           {t.footer}
         </p>
-      </div>
+      </Container>
     </footer>
   );
 }

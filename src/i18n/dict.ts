@@ -2,6 +2,7 @@ export const langs = ["es", "en"] as const;
 export type Lang = (typeof langs)[number];
 
 export type StackGroup = {
+  id: string;
   label: string;
   items: string[];
   /** Grupos principales: se muestran con mayor jerarquía tipográfica */
@@ -22,6 +23,8 @@ export type ExperienceEntry = {
 export type Dict = {
   header: {
     print: string;
+    themeToLight: string;
+    themeToDark: string;
   };
   hero: {
     role: string;
@@ -80,10 +83,12 @@ export const dict: Record<Lang, Dict> = {
   es: {
     header: {
       print: "Imprimir",
+      themeToLight: "Activar tema claro",
+      themeToDark: "Activar tema oscuro",
     },
     hero: {
       role: "Ingeniero IT · Lead Full Stack",
-      meta: "Ciudad de México · +8 años · GCP · Java · Spring Boot · React",
+      meta: "Nayarit, MX · +8 años · GCP · Java · Spring Boot · React",
       ctaEmail: "Email",
       ctaLinkedin: "LinkedIn",
       ctaDownload: "Descargar CV",
@@ -106,16 +111,19 @@ export const dict: Record<Lang, Dict> = {
       "Ingeniero IT & Lead Full Stack con +8 años de experiencia diseñando e integrando soluciones empresariales en la nube. Actualmente lidero equipos en VASS LATAM, combinando la gestión técnica con decisiones de arquitectura, revisión de código y diseño de sistemas. Especializado en Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) y frontend moderno (Next.js, React, TypeScript). Enfocado en entregar arquitecturas escalables, seguras y de alto rendimiento, optimizando el ciclo de desarrollo mediante la integración de IA.",
     stack: [
       {
+        id: "integration",
         label: "Integración",
         items: ["MuleSoft", "Anypoint Studio", "Apigee API Gateway"],
         primary: true,
       },
       {
+        id: "cloud",
         label: "Cloud",
         items: ["Google Cloud Platform (GCP)", "Terraform", "Vercel"],
         primary: true,
       },
       {
+        id: "backend",
         label: "Backend",
         items: [
           "Java",
@@ -130,11 +138,13 @@ export const dict: Record<Lang, Dict> = {
         primary: true,
       },
       {
+        id: "frontend",
         label: "Frontend",
         items: ["React", "Angular", "Thymeleaf", "TypeScript", "Tailwind CSS"],
         primary: false,
       },
       {
+        id: "practices",
         label: "Prácticas y herramientas",
         items: [
           "Git / Git Flow",
@@ -175,6 +185,7 @@ export const dict: Record<Lang, Dict> = {
         bullets: [
           "Desarrollé y optimicé interfaces y flujos de integración empresarial complejos utilizando MuleSoft y Anypoint Studio, conectando sistemas clave para Coppel a nivel empresarial (SQL Server y PostgreSQL).",
           "Implementé soluciones de integración de servicios con Google Cloud Platform (GCP) y Spring Boot, aplicando metodologías ágiles y prácticas DevOps para asegurar entregas continuas y eficientes.",
+          "Desarrollé nuevas features en servicios REST con Spring Boot, PHP y Node.js, integrando APIs de terceros y optimizando la comunicación entre sistemas internos.",
           "Realicé análisis exhaustivos de código y remediación de vulnerabilidades críticas en componentes front-end (React, Angular) y back-end (Java), mejorando la seguridad y robustez de las aplicaciones.",
           "Elaboré manuales e instructivos técnicos para la correcta adopción de las soluciones desarrolladas.",
         ],
@@ -241,10 +252,12 @@ export const dict: Record<Lang, Dict> = {
   en: {
     header: {
       print: "Print",
+      themeToLight: "Switch to light theme",
+      themeToDark: "Switch to dark theme",
     },
     hero: {
       role: "IT Engineer · Full Stack Lead",
-      meta: "Mexico City · 8+ yrs · GCP · Java · Spring Boot · React",
+      meta: "Nayarit, MX · 8+ yrs · GCP · Java · Spring Boot · React",
       ctaEmail: "Email",
       ctaLinkedin: "LinkedIn",
       ctaDownload: "Download CV",
@@ -267,16 +280,19 @@ export const dict: Record<Lang, Dict> = {
       "IT Engineer & Full Stack Lead with 8+ years of experience designing and integrating enterprise solutions in the cloud. Currently leading teams at VASS LATAM, combining hands-on technical management with architecture decisions, code review and system design. Specialized in Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) and modern frontend (Next.js, React, TypeScript). Focused on delivering scalable, secure, high-performance architectures while speeding up the development cycle with AI.",
     stack: [
       {
+        id: "integration",
         label: "Integration",
         items: ["MuleSoft", "Anypoint Studio", "Apigee API Gateway"],
         primary: true,
       },
       {
+        id: "cloud",
         label: "Cloud",
         items: ["Google Cloud Platform (GCP)", "Terraform", "Vercel"],
         primary: true,
       },
       {
+        id: "backend",
         label: "Backend",
         items: [
           "Java",
@@ -291,11 +307,13 @@ export const dict: Record<Lang, Dict> = {
         primary: true,
       },
       {
+        id: "frontend",
         label: "Frontend",
         items: ["React", "Angular", "Thymeleaf", "TypeScript", "Tailwind CSS"],
         primary: false,
       },
       {
+        id: "practices",
         label: "Practices & tools",
         items: [
           "Git / Git Flow",

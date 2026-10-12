@@ -1,4 +1,5 @@
 import { LangProvider } from "@/i18n/lang-context";
+import { ThemeProvider } from "@/theme/theme-context";
 import CVPage from "@/components/CVPage";
 
 const personLd = {
@@ -35,12 +36,16 @@ const personLd = {
 
 export default function Page() {
   return (
-    <LangProvider>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personLd) }}
       />
-      <CVPage />
-    </LangProvider>
+      <LangProvider>
+        <ThemeProvider>
+          <CVPage />
+        </ThemeProvider>
+      </LangProvider>
+    </>
   );
 }
