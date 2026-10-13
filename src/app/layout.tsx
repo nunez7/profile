@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const archivo = Archivo({
+/* Display+body: grotesca con carácter (ejes ópticos, detalles
+   quirúrgicos). Datos de ingeniería: Plex Mono, más personalidad
+   que la mono habitual. Ambas self-hosted vía next/font. */
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-archivo",
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-display",
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-jetbrains",
+  weight: ["400", "500", "600"],
+  variable: "--font-plex",
   display: "swap",
 });
 
@@ -44,7 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${archivo.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${plexMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

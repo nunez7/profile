@@ -36,11 +36,23 @@ export const TECH_COLORS: Record<string, string> = {
 /**
  * Hue de categoría para la regla superior de cada grupo del Stack.
  * Keyed por el `id` localizable del grupo (los labels varían por idioma).
+ * Son vars semánticas: cada tema trae su propio valor (saturado en
+ * claro, con brillo controlado en oscuro) sin tocar los componentes.
  */
 export const STACK_HUES: Record<string, string> = {
-  integration: "#0ea5c6",
-  cloud: "#7c3aed",
-  backend: "#ea580c",
-  frontend: "#2563eb",
-  practices: "#059669",
+  integration: "var(--cat-integration)",
+  cloud: "var(--cat-cloud)",
+  backend: "var(--cat-backend)",
+  frontend: "var(--cat-frontend)",
+  practices: "var(--cat-practices)",
+};
+
+/**
+ * Color de empresa para el nodo del timeline (nodo, hash y badge
+ * HEAD). Keyed por el nombre exacto de la empresa en el dict —
+ * idéntico en ES y EN. VASS (marca) contra Universidad (cloud).
+ */
+export const COMPANY_COLORS: Record<string, string> = {
+  "VASS LATAM": "var(--brand)",
+  "Universidad Tecnológica de La Costa": "var(--cat-cloud)",
 };

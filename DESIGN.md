@@ -8,24 +8,42 @@ Los componentes **solo** consumen tokens semánticos. Nunca hex, nunca escalas d
 
 ### Capa semántica (`:root` claro / `.dark` oscuro)
 
+Marca: **ultravioleta** (`#4338F0` / `#8B80FF`). Cada tema está diseñado por separado — el claro sobre papel lavanda, el oscuro con los negros tintados hacia la marca. Nada de negro puro ni gris frío.
+
 | Token | Claro | Oscuro | Rol |
 |---|---|---|---|
-| `--background` | `#F5F7F8` | `#0E1116` | Fondo de página (papel frío / tinta) |
-| `--surface` | `#FFFFFF` | `#151A21` | Superficie de panel (KPIs, timeline, stack) |
-| `--foreground` | `#0E1116` | `#ECEFF3` | Texto principal |
-| `--muted` | `#5A6472` | `#98A2B0` | Texto secundario (≥4.5:1 en ambos temas) |
-| `--rule` | `#DDE3E9` | `#252D38` | Hairlines, divisores, bordes |
-| `--accent` | `#2C5FFF` | `#6E90FF` | Cobalto: único color de énfasis interactivo |
-| `--accent-contrast` | `#F8FAFC` | `#0B0F14` | Texto sobre acento sólido |
-| `--added` | `#15803D` | `#3FB950` | Git: «línea agregada» (marcadores de logros, `+`, strings de código) |
-| `--removed` | `#B91C1C` | `#F85149` | Git: «línea quitada» (`−` al plegar) |
+| `--background` | `#F5F4FA` | `#12101F` | Fondo de página (papel lavanda / negro tintado índigo) |
+| `--surface` | `#FFFFFF` | `#1A1730` | Superficie de panel (KPIs, timeline, stack) |
+| `--surface-elevated` | `#FCFBFF` | `#221E3C` | Capa alta: ventana `profile.ts` del hero |
+| `--foreground` | `#16142A` | `#ECEAF6` | Texto principal (tinta índigo) |
+| `--muted` | `#565170` | `#A29DC0` | Texto secundario (6.8:1 / 7.3:1) |
+| `--rule` | `#E4E1F0` | `#2B2745` | Hairlines, divisores, bordes |
+| `--brand` | `#4338F0` | `#8B80FF` | Color de marca (6.9:1 / 5.5:1 sobre superficie) |
+| `--accent` | `var(--brand)` | `var(--brand)` | Alias de marca para utilities (`text-accent`, foco) |
+| `--accent-contrast` | `#FFFFFF` | `#14122A` | Texto sobre acento sólido (5.8:1) |
+| `--added` | `#047857` | `#34D399` | Git: «línea agregada» (marcadores de logros, `+`, strings) |
+| `--removed` | `#BE123C` | `#FB7185` | Git: «línea quitada» (`−` al plegar) |
 
-### Superficie y elevación (lo que hace que se sienta «robusta»)
+**Acentos semánticos por categoría** — los «tokens de sintaxis» del mundo IDE. Cada categoría del stack vive siempre en su color: regla superior de la tarjeta, icono, nodo del timeline y KPI asociado. Saturados en claro (AA sobre blanco), con brillo controlado en oscuro:
 
-La elevación la define el **borde**, no la sombra. Tokens en `:root`/`.dark`:
+| Token | Claro | Oscuro | Categoría |
+|---|---|---|---|
+| `--cat-integration` | `#0E7FA8` | `#2FB6DB` | Integración (cian) |
+| `--cat-cloud` | `#6D28D9` | `#A78BFA` | Cloud (violeta) |
+| `--cat-backend` | `#C2410C` | `#FB923C` | Backend (naranja) |
+| `--cat-frontend` | `#1D4ED8` | `#60A5FA` | Frontend (azul) |
+| `--cat-practices` | `#047857` | `#34D399` | Prácticas (esmeralda) |
+
+`STACK_HUES` y `COMPANY_COLORS` (`src/data/tech-colors.ts`) devuelven estas vars, así que los componentes no conocen hex. Los 18 pares texto/superficie clave pasan AA (≥4.5:1) verificado por script.
+
+### Superficie y elevación (tres capas con sombra tintada)
+
+La elevación combina **borde + sombra con color de marca** (nunca gris neutro). Tokens en `:root`/`.dark`:
 
 - `--panel-radius: 6px` → utility `rounded-panel` — el único radio del sistema.
-- `--panel-shadow` → utility `shadow-panel`: en claro, sombra de dos capas casi imperceptible; en oscuro, `inset` de un pelo de luz en el canto superior (allí manda el borde). Se anula en print (`--panel-shadow: none`).
+- `--panel-shadow` → `shadow-panel`: en claro, dos capas tintadas en ultravioleta al 5–6%; en oscuro, `inset` de un pelo de luz en el canto superior (allí manda el borde).
+- `--elevated-shadow` → `shadow-elevated`: capa alta (`Panel elevated`), tinte más pronunciado. Reservado al `profile.ts`.
+- Ambas sombras se anulan en print.
 
 El primitivo es `ui/Panel` (superficie + borde `rule` + radio + sombra). Todo bloque con estructura —KPIs, entradas del timeline, grupos del stack, la formación— se construye con él para que borde, radio y sombra sean idénticos en todo el sitio. El hover de un panel interactivo lleva el borde a `accent` con alpha.
 
@@ -33,12 +51,18 @@ El primitivo es `ui/Panel` (superficie + borde `rule` + radio + sombra). Todo bl
 
 Tres sistemas de color ganados por el contenido, coherentes con el mundo «código fuente»:
 
-- **Language dots** (`src/data/tech-colors.ts`): cada tecnología del Stack lleva un punto de 9px con su **color de marca real** (paleta estilo GitHub). Solo aplica a tecnologías; las prácticas van sin punto (marcadas con un guión mono para alinear la columna).
-- **Hue por categoría** (`STACK_HUES`): la regla superior de cada panel del Stack (2px) lleva el hue de su categoría — integración cian, cloud violeta, backend naranja, frontend azul, prácticas esmeralda.
+- **Iconos de tecnología** (`src/data/tech-icons.ts` + `TECH_COLORS`): cada tecnología del Stack lleva un icono de simple-icons (17 paths SVG, CC0, sin dependencias) tiñido con su **color de marca real** (paleta estilo GitHub). Anypoint Studio y Apigee no existen en simple-icons → caen al punto de color de 9px. Las prácticas no son «tecnología»: van sin icono, marcadas con un guión mono para alinear la columna.
+- **Hue por categoría** (`STACK_HUES`): la regla superior de cada panel del Stack (2px) lleva el hue semántico de su categoría — integración cian, cloud violeta, backend naranja, frontend azul, prácticas esmeralda.
 - **Syntax highlighting del `profile.ts`**: keyword (`interface`) en accent, identificadores en foreground, strings en `--added` (verde), puntuación en muted. Es texto, no decoración — por eso reutiliza la paleta semántica y no colores nuevos.
 - **Semántica git diff**: los marcadores de cada logro son líneas agregadas → verdes (`--added`); el toggle `+` es verde y el `−` rojo, con el glifo rotando al plegar.
+- **Empresas diferenciadas** (`COMPANY_COLORS`): cada nodo del timeline tiñe anillo, hash y badge HEAD con el color de su empresa (VASS → marca, Universidad → cloud). El HEAD va relleno con halo suave del mismo color; el rail se enciende en marca hacia arriba (`.exp-rail`).
+- **KPIs con color por métrica**: experiencia → marca, trayectoria → backend, certificaciones → prácticas (borde superior + cifra en el color).
 
-Reglas del acento: el cobalto se gasta en el grafo de git (nodos, HEAD), el CTA primario, foco, hovers de enlace y el hash de cada commit. Nada más.
+Reglas del acento: la marca se gasta en el CTA primario, foco, hovers de enlace, el hash del commit actual y el rail hacia HEAD. Nada más.
+
+### Textura del hero
+
+El hero lleva una capa absoluta (`.hero-texture`) con tres fondos: dos halos radiales (marca 13% arriba-derecha, integración 10% abajo-izquierda), un grid hairline de 72px en `--hero-grid-line` que se desvanece con `mask-image`, y ruido de papel (SVG feTurbulence, `multiply` en claro / `soft-light` en oscuro). El nombre lleva un **subrayado de gradiente** (marca → cian → violeta) que se dibuja una vez al cargar (`underline-draw`, 640ms, con `prefers-reduced-motion` respetado) — el momento elaborado del sitio.
 
 ### Tema
 
@@ -50,7 +74,7 @@ Reglas del acento: el cobalto se gasta en el grafo de git (nodos, HEAD), el CTA 
 
 ## Tipografía
 
-- **Archivo** (400–700): display y body. **JetBrains Mono** (400–500): exclusivamente datos de ingeniería (fechas, empresas, categorías, HEAD, stats). Self-hosted vía `next/font`.
+- **Bricolage Grotesque** (400–800): display y body — grotesca con carácter (axes ópticos, detalles quirúrgicos), poco vista. **IBM Plex Mono** (400–600): exclusivamente datos de ingeniería (fechas, empresas, categorías, HEAD, stats) — más personalidad que la mono habitual. Self-hosted vía `next/font` (`--font-display` / `--font-plex` → `--font-sans` / `--font-mono` en `@theme inline`).
 
 Escala semántica (`@theme`, Tailwind v4):
 
@@ -61,7 +85,7 @@ Escala semántica (`@theme`, Tailwind v4):
 | `--text-body` | 17 | Párrafo de síntesis (medida `58ch` ≈ 74 chars) |
 | `--text-lead` | 19 | Rol del hero, items de stack primarios, títulos de educación |
 
-Display: nombre en hero `clamp(2.6rem, 8.5vw, 4.75rem)` SemiBold, tracking `-0.03em` (piso del craft floor: `-0.04em`). Títulos de sección 25/31px.
+Display: nombre en hero `clamp(2.6rem, 8.5vw, 4.75rem)` Bold (700), tracking `-0.03em`. Títulos de sección 25/31px.
 
 ## Layout
 
@@ -75,7 +99,7 @@ Display: nombre en hero `clamp(2.6rem, 8.5vw, 4.75rem)` SemiBold, tracking `-0.0
 |---|---|---|
 | `Container` | Ancho de contenido y gutter del proyecto | 6 |
 | `Section` | Regla + título display + contenido (+ `id` para anclas) | 5 |
-| `Panel` | Superficie elevada: borde `rule`, radio 6px, sombra viva | 7 |
+| `Panel` | Superficie elevada: borde `rule`, radio 6px, sombra viva (+ variante `elevated`) | 7 |
 | `TextLink` | Enlace de texto, underline `rule` → `accent` en hover | 5 |
 | `Reveal` / `useReveal` | Revelado por scroll, una sola vez | — |
 | `useScrollSpy` | Sección activa según scroll (umbrales del header) | 1 |
@@ -96,7 +120,7 @@ Dos dispositivos envuelven la página como un editor, ambos `no-print`:
 - **`ProfileWindow`**: ventana de editor (semáforo + pestaña `profile.ts`) con `$ cat profile.ts` y una `interface Profile` con syntax highlighting. Alineación de propiedades por padding mono; caret que parpadea al final del `status`.
 - **Timeline tipo `git log`**: cada entrada es un panel con hash corto (cosmético, determinístico) en accent, badge `HEAD → main` en el rol actual, y el toggle `+`/`−` de diff. Los logros se despliegan dentro del panel con borde superior.
 - **Stack tipo manifiesto**: cada grupo es un panel con filas alineadas — punto de color de marca, nombre (lead si es `primary`, muted si no) y hue de categoría como regla superior.
-- **KPIs del hero**: tres paneles con label mono (`subhead`), cifra display 28px y unidad mono muted.
+- **KPIs del hero**: tres paneles con borde superior en el color de su métrica, label mono (`subhead`), cifra display 28px en color y unidad mono muted.
 
 ## Movimiento
 

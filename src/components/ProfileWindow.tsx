@@ -16,7 +16,7 @@ export default function ProfileWindow() {
 
   return (
     <div className="animate-rise" style={{ animationDelay: "300ms" }}>
-      <Panel className="overflow-hidden">
+      <Panel elevated className="overflow-hidden">
         {/* Chrome de editor: semáforo + pestaña activa */}
         <div className="flex h-9 items-center gap-2 border-b border-rule px-3">
           <span aria-hidden className="flex items-center gap-1.5">

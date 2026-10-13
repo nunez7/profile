@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLang } from "@/i18n/lang-context";
+import { COMPANY_COLORS } from "@/data/tech-colors";
 import { Section } from "./ui/Section";
 import { Panel } from "./ui/Panel";
 import { useReveal } from "./ui/use-reveal";
@@ -20,19 +21,40 @@ function Entry({
 }) {
   const { ref, visible } = useReveal<HTMLLIElement>("-60px");
 
+  /* Cada empresa tiñe su nodo, su hash y su badge HEAD — el grafo
+     de git distingue de un vistazo quién es quién. */
+  const companyColor = COMPANY_COLORS[entry.company] ?? "var(--brand)";
+
   return (
     <li ref={ref} data-visible={visible} className="reveal relative pl-9 md:pl-12">
-      {/* Nodo del grafo de git */}
+      {/* Nodo del grafo de git: anillo en color de empresa; el HEAD
+          va relleno con un halo suave de su color */}
       <span
         aria-hidden
-        className={`absolute left-0 top-[19px] size-[15px] rounded-full border-2 border-accent ${
-          entry.head ? "bg-accent" : "bg-background"
+        className={`absolute left-0 top-[19px] size-[15px] rounded-full border-2 ${
+          entry.head ? "" : "bg-background"
         }`}
+        style={{
+          borderColor: companyColor,
+          ...(entry.head
+            ? {
+                backgroundColor: companyColor,
+                boxShadow: `0 0 0 4px color-mix(in oklab, ${companyColor} 18%, transparent)`,
+              }
+            : {}),
+        }}
       />
       <Panel
         className={`transition-colors ${
-          open ? "border-accent/50" : "hover:border-accent/40"
+          open ? "" : "hover:border-accent/40"
         }`}
+        style={
+          open
+            ? {
+                borderColor: `color-mix(in oklab, ${companyColor} 55%, transparent)`,
+              }
+            : undefined
+        }
       >
         <button
           type="button"
@@ -45,7 +67,8 @@ function Entry({
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <span
               aria-hidden
-              className="font-mono text-[11px] text-accent/80 motion-reduce:transition-none"
+              className="font-mono text-[11px] motion-reduce:transition-none"
+              style={{ color: companyColor }}
             >
               {entry.hash}
             </span>
@@ -53,7 +76,14 @@ function Entry({
               {entry.role}
             </h3>
             {entry.head && (
-              <span className="rounded-[3px] border border-accent/40 bg-accent/10 px-1.5 py-px font-mono text-[10px] tracking-tight text-accent">
+              <span
+                className="rounded-[3px] border px-1.5 py-px font-mono text-[10px] tracking-tight"
+                style={{
+                  borderColor: `color-mix(in oklab, ${companyColor} 40%, transparent)`,
+                  backgroundColor: `color-mix(in oklab, ${companyColor} 12%, transparent)`,
+                  color: companyColor,
+                }}
+              >
                 HEAD → main
               </span>
             )}
@@ -110,7 +140,7 @@ export default function ExperienceTimeline() {
   return (
     <Section id="experience" title={t.sections.experience}>
       <div className="relative">
-        <span aria-hidden className="absolute left-[7px] top-3 bottom-3 w-px bg-rule" />
+        <span aria-hidden className="exp-rail absolute left-[7px] top-3 bottom-3 w-px" />
         <ul className="relative flex flex-col gap-4 md:gap-5">
           {t.experience.map((entry, i) => (
             <Entry

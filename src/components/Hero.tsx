@@ -8,13 +8,20 @@ import ProfileWindow from "./ProfileWindow";
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/felix-nunezg";
 
+/* Color por métrica del KPI: trayectoria (roles) en naranja de
+   backend, certificados en esmeralda de prácticas — coherente con
+   la paleta semántica del sistema. */
+const KPI_HUES = ["var(--brand)", "var(--cat-backend)", "var(--cat-practices)"];
+
 export default function Hero() {
   const { t } = useLang();
 
   return (
-    <section id="top" className="pt-16 pb-14 md:pt-24 md:pb-20">
+    <section id="top" className="relative isolate pt-16 pb-14 md:pt-24 md:pb-20">
+      {/* Textura de fondo: grid hairline + halos de marca + ruido */}
+      <div aria-hidden className="hero-texture absolute inset-0 -z-10" />
       <Container>
-        <h1 className="text-[clamp(2.6rem,8.5vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
+        <h1 className="text-[clamp(2.6rem,8.5vw,4.75rem)] font-bold leading-[0.98] tracking-[-0.03em]">
           <span className="animate-rise block">FÉLIX JAVIER</span>
           <span
             className="animate-rise block"
@@ -23,6 +30,11 @@ export default function Hero() {
             NÚÑEZ GONZÁLEZ
           </span>
         </h1>
+        {/* Subrayado de marca: gradiente que se dibuja al cargar */}
+        <span
+          aria-hidden
+          className="name-underline mt-4 block h-[7px] w-full max-w-[34rem] rounded-full"
+        />
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-14">
           {/* Columna izquierda: identidad, CTAs y KPIs */}
@@ -73,16 +85,24 @@ export default function Hero() {
               </TextLink>
             </div>
 
-            {/* KPIs: paneles de datos, label mono + cifra display */}
+            {/* KPIs: paneles de datos, label mono + cifra display.
+                Cada métrica lleva su color: marca/trayectoria/certs */}
             <dl
               className="animate-rise mt-9 grid grid-cols-3 gap-3"
               style={{ animationDelay: "380ms" }}
             >
-              {t.hero.kpis.map((kpi) => (
-                <Panel key={kpi.label} className="px-4 py-3">
+              {t.hero.kpis.map((kpi, i) => (
+                <Panel
+                  key={kpi.label}
+                  className="border-t-2 px-4 py-3"
+                  style={{ borderTopColor: KPI_HUES[i] ?? "var(--rule)" }}
+                >
                   <dt className="subhead">{kpi.label}</dt>
                   <dd className="mt-1 flex items-baseline gap-1">
-                    <span className="text-[28px] font-semibold leading-none tracking-[-0.02em]">
+                    <span
+                      className="text-[28px] font-semibold leading-none tracking-[-0.02em]"
+                      style={{ color: KPI_HUES[i] ?? "var(--foreground)" }}
+                    >
                       {kpi.value}
                     </span>
                     {kpi.unit && (
