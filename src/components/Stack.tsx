@@ -30,8 +30,10 @@ export default function Stack() {
               delay={i * 60}
               className={group.id === "backend" ? "sm:row-span-2" : undefined}
             >
-              {/* Regla de categoría: 2px en el hue del grupo */}
-              <Panel flat hue={hue} className="overflow-hidden">
+              {/* Regla de categoría: 2px en el hue del grupo; en hover,
+                  todo el borde se tiñe con ese mismo hue y la tarjeta
+                  se eleva (solo puntero fino) */}
+              <Panel flat hue={hue} hoverHue={hue} className="overflow-hidden">
                 <h3 className="subhead border-b border-rule px-4 py-2.5">
                   {group.label}
                 </h3>

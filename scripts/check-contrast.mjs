@@ -20,9 +20,6 @@ const CSS_PATH = join(ROOT, "src", "app", "globals.css");
 
 const TEXT_MIN = 4.5;
 const STATE_MIN = 3.0;
-/* Alfa del borde hover (`accent/70` en los componentes) — se compone
-   en sRGB para medir el estado real sobre cada superficie. */
-const HOVER_ALPHA = 0.7;
 
 /* ---------------------------- utilidades ---------------------------- */
 
@@ -86,22 +83,6 @@ function luminance(hex) {
 function contrast(a, b) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
-}
-
-/** Compone un color con alfa sobre una base (aprox. sRGB de color-mix). */
-function blend(hex, alpha, over) {
-  const fg = rgb(hex);
-  const bg = rgb(over);
-  return (
-    "#" +
-    fg
-      .map((v, i) =>
-        Math.round(alpha * v + (1 - alpha) * bg[i])
-          .toString(16)
-          .padStart(2, "0"),
-      )
-      .join("")
-  );
 }
 
 /* ----------------------------- pares ------------------------------- */
@@ -194,26 +175,29 @@ for (const [themeName, theme] of THEMES) {
   // Estados (solo pantalla — print no tiene hover ni foco visible)
   if (themeName !== "print") {
     const brand = t("--brand");
-    const hoverFg = blend(brand, HOVER_ALPHA, surfaces.tarjeta);
-    const hoverBg = blend(brand, HOVER_ALPHA, surfaces.fondo);
+    // Hover de tarjeta (.panel-hover): el borde completo se tiñe con el
+    // hue de categoría/empresa — ≥3:1 contra la tarjeta (por dentro, ya
+    // cubierto a 4.5 como texto) y contra el fondo (por fuera).
+    for (const role of CATS) {
+      checks.push({
+        theme: themeName,
+        name: `borde hover ${role} vs fondo`,
+        fg: t(role),
+        bg: surfaces.fondo,
+        min: STATE_MIN,
+      });
+      checks.push({
+        theme: themeName,
+        name: `borde hover ${role} vs tarjeta`,
+        fg: t(role),
+        bg: surfaces.tarjeta,
+        min: STATE_MIN,
+      });
+    }
     checks.push({
       theme: themeName,
-      name: `borde hover accent/${HOVER_ALPHA * 100} vs tarjeta`,
-      fg: hoverFg,
-      bg: surfaces.tarjeta,
-      min: STATE_MIN,
-    });
-    checks.push({
-      theme: themeName,
-      name: `borde hover accent/${HOVER_ALPHA * 100} vs fondo`,
-      fg: hoverFg,
-      bg: surfaces.fondo,
-      min: STATE_MIN,
-    });
-    checks.push({
-      theme: themeName,
-      name: "borde hover (fuera de tarjeta) vs fondo",
-      fg: hoverBg,
+      name: "borde hover brand (empresa) vs fondo",
+      fg: brand,
       bg: surfaces.fondo,
       min: STATE_MIN,
     });

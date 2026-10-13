@@ -322,6 +322,58 @@ body {
   transition: transform 260ms var(--ease-out);
 }
 
+/* Hover de tarjeta (solo Stack y Timeline): eleva un rung de sombra
+   (`flat` → panel, sombra → elevated) y tiñe todo el borde con el hue
+   de la categoría/empresa que Panel expone en `--panel-hue`. Solo
+   puntero fino — en táctil no hay hover y el estado pegado confundiría
+   el escaneo del CV. */
+.panel-hover {
+  transition:
+    border-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out),
+    translate 200ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .panel-hover:hover {
+    border-color: var(--panel-hue, var(--accent));
+    box-shadow: var(--panel-hover-shadow, var(--elevated-shadow));
+    translate: 0 -2px;
+  }
+}
+
+/* Transición de tema: la clase la pone y quita theme-context durante
+   el conmutado del usuario. La carga inicial NO la lleva — el init
+   script aplica el tema antes del primer paint y eso se pinta ya, sin
+   animar (cero parpadeo). La lista incluye transform/opacity para que
+   el morph del icono de tema, el press y los revelados siga vivo
+   durante la ventana; sin prefers-reduced-motion (el JS no añade la
+   clase y esta regla se apaga igual). */
+@media (prefers-reduced-motion: no-preference) {
+  .theme-transition,
+  .theme-transition *,
+  .theme-transition *::before,
+  .theme-transition *::after {
+    transition:
+      background-color 250ms var(--ease-in-out),
+      border-color 250ms var(--ease-in-out),
+      outline-color 250ms var(--ease-in-out),
+      color 250ms var(--ease-in-out),
+      fill 250ms var(--ease-in-out),
+      stroke 250ms var(--ease-in-out),
+      box-shadow 250ms var(--ease-in-out),
+      background-image 250ms var(--ease-in-out),
+      opacity 250ms var(--ease-in-out),
+      transform 250ms var(--ease-in-out),
+      translate 250ms var(--ease-in-out),
+      grid-template-rows 250ms var(--ease-in-out);
+    /* Los delays escalonados (reveal, bullets) son inline y
+       !important los aplana: durante el cambio de tema todo cruza
+       a la vez — un solo fundido, no olas. */
+    transition-delay: 0s !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-rise {
     animation: none;
@@ -343,6 +395,18 @@ body {
 
   .press:active {
     transform: none;
+  }
+
+  /* Hover de tarjeta sin movimiento: el borde de color se queda (es
+     indicación de estado, no adorno) y desaparece el lift. */
+  .panel-hover {
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  .panel-hover:hover {
+    translate: none;
   }
 
   /* Reduced motion = menos movimiento, no cero: el fade ayuda a
@@ -403,6 +467,16 @@ body {
   /* El PDF sale con todos los logros desplegados */
   .exp-panel {
     grid-template-rows: 1fr !important;
+  }
+
+  /* …y con sus bullets visibles, aunque la entrada esté plegada
+     (los bullets llevan opacidad/translate para la animación —
+     translate-y-* de Tailwind v4 es la propiedad `translate`) */
+  .exp-panel li {
+    opacity: 1 !important;
+    translate: none !important;
+    transform: none !important;
+    transition: none !important;
   }
 
   /* …y con todo el contenido revelado, aunque su sección nunca haya

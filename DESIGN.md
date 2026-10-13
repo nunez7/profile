@@ -34,7 +34,7 @@ Marca: **ultravioleta** (`#4338F0` / `#8B80FF`). Cada tema está diseñado por s
 | `--cat-frontend` | `#1D4ED8` | `#60A5FA` | Frontend (azul) |
 | `--cat-practices` | `#047857` | `#34D399` | Prácticas (esmeralda) |
 
-`STACK_HUES` y `COMPANY_COLORS` (`src/data/tech-colors.ts`) devuelven estas vars, así que los componentes no conocen hex. El contraste se verifica por script — `npm run check:contrast` (`scripts/check-contrast.mjs`, Node sin dependencias): parsea `globals.css` (claro, oscuro y el override de print), resuelve las vars y exige **≥4.5:1** para pares de texto y **≥3:1** para estados de interacción (borde hover compuesto, anillo de foco); falla con código 1 si algún par baja del umbral.
+`STACK_HUES` y `COMPANY_COLORS` (`src/data/tech-colors.ts`) devuelven estas vars, así que los componentes no conocen hex. El contraste se verifica por script — `npm run check:contrast` (`scripts/check-contrast.mjs`, Node sin dependencias): parsea `globals.css` (claro, oscuro y el override de print), resuelve las vars y exige **≥4.5:1** para pares de texto y **≥3:1** para estados de interacción (borde hover por hue de categoría/empresa, anillo de foco); falla con código 1 si algún par baja del umbral.
 
 ### Superficie y elevación (tres capas con sombra tintada)
 
@@ -47,7 +47,7 @@ La elevación combina **borde + sombra con color de marca** (nunca gris neutro).
 
 La profundidad del claro es una decisión de escalera: papel lavanda (`#F1EFF9`) → tarjeta blanca → capa elevada casi blanca con sombra ancha. El papel va deliberadamente un punto más profundo que la tarjeta para que el blanco lea como elevación; los hairlines (`--rule`) se quedan en ~1.4:1 — visibles sin competir.
 
-El primitivo es `ui/Panel` (superficie + borde `rule` + radio, con la prop `hue` que dibuja la regla superior de 2px — mismo patrón en KPIs y grupos del stack). La elevación es jerárquica, no uniforme: **`flat`** (solo borde, sin sombra) para estructura estática —KPIs, grupos del stack, formación—; **`shadow-panel`** para las entradas interactivas del timeline, donde la sombra señala «clicable»; **`elevated`** para el `profile.ts`. El hover de un panel interactivo lleva el borde a `accent/70` (≥3:1 sobre tarjeta y fondo en ambos temas — contraste de estado, WCAG 1.4.11).
+El primitivo es `ui/Panel` (superficie + borde `rule` + radio, con la prop `hue` que dibuja la regla superior de 2px — mismo patrón en KPIs y grupos del stack). La elevación es jerárquica, no uniforme: **`flat`** (solo borde, sin sombra) para estructura estática —KPIs, grupos del stack, formación—; **`shadow-panel`** para las entradas interactivas del timeline, donde la sombra señala «clicable»; **`elevated`** para el `profile.ts`. El hover de tarjeta (prop `hoverHue`, solo Stack y Timeline; gateado en `@media (hover: hover) and (pointer: fine)`) tiñe **todo el borde** con el hue de la categoría/empresa y sube la tarjeta un rung de escalera — `flat` gana `--panel-shadow`, la ya sombreada `--elevated-shadow` — con `translate: -2px` a 200ms `--ease-out`; los pares de borde hue contra tarjeta y fondo se verifican a ≥3:1 (WCAG 1.4.11). Formación, KPIs y `profile.ts` permanecen estáticos: no son «clicables», elevarlos mentiría.
 
 ### Color temático (contenido, no decoración)
 
@@ -101,7 +101,7 @@ Display: nombre en hero `clamp(2.6rem, 8.5vw, 4.75rem)` Bold (700), tracking `-0
 |---|---|---|
 | `Container` | Ancho de contenido y gutter del proyecto | 6 |
 | `Section` | Regla + título display + contenido (+ `id` para anclas) | 5 |
-| `Panel` | Superficie con elevación jerárquica: `flat` (estructura estática, solo borde), sombra viva (entradas interactivas), `elevated` (hero); prop `hue` para regla de categoría | 13 |
+| `Panel` | Superficie con elevación jerárquica: `flat` (estructura estática, solo borde), sombra viva (entradas interactivas), `elevated` (hero); prop `hue` para regla de categoría, prop `hoverHue` para hover de borde + elevación | 13 |
 | `TextLink` | Enlace de texto, underline `rule` → `accent` en hover; variante `quiet` (muted hasta hover) para junto al CTA primario | 5 |
 | `Reveal` / `useReveal` | Revelado por scroll, una sola vez | — |
 | `useScrollSpy` | Sección activa según scroll (umbrales del header) | 1 |
@@ -128,12 +128,14 @@ Dos dispositivos envuelven la página como un editor, ambos `no-print`:
 
 Curvas de easing fuertes en `:root`: `--ease-out` (`0.23, 1, 0.32, 1`), `--ease-in-out` (`0.77, 0, 0.175, 1`), `--ease-drawer` (`0.32, 0.72, 0, 1`). Las default de CSS se sienten flojas; estas dan punch.
 
-- **Revelo de carga del hero**: stagger 0/80/160/220/300/380ms con `--ease-out`.
-- **Revelado por scroll** (`.reveal` + `useReveal`/`Reveal`): grupos del Stack (stagger 60ms) y entradas del timeline entran una sola vez desde abajo; se desconecta el `IntersectionObserver` al primer cruce.
+- **Revelo de carga del hero**: stagger 0/80/160/220/300ms para el bloque del hero y 380/440/500ms para los tres KPIs (uno por panel, dentro de su bloque) con `--ease-out`.
+- **Revelado por scroll** (`.reveal` + `useReveal`/`Reveal`): grupos del Stack (stagger 60ms) y entradas del timeline (stagger 60ms vía `transitionDelay` en el `li`) entran una sola vez desde abajo; se desconecta el `IntersectionObserver` al primer cruce.
+- **Hover de tarjeta** (`.panel-hover`): solo `(hover: hover) and (pointer: fine)` — en táctil el hover queda pegado tras el tap y confunde el escaneo. Borde al hue + elevación un rung + `translate: -2px`, todo a 180–200ms `--ease-out`. Con `prefers-reduced-motion` se conserva el color de borde (es estado, no adorno) y desaparece el lift.
+- **Transición de tema**: `.theme-transition` se añade a `<html>` solo durante el toggle del usuario y se retira a los 300ms — todos los colores (superficies, texto, bordes, sombras) cruzan a 250ms `--ease-in-out`. La carga inicial **no** lleva la clase: el init script de `layout.tsx` aplica el tema antes del primer paint, así que abrir la página sigue siendo sin parpadeo. Bajo `prefers-reduced-motion` el JS no añade la clase y la regla CSS se apaga: cambio instantáneo.
 - **Press-feedback** (`.press`): todo elemento presionable escala a `0.97` en `:active` a 160ms — botón de descarga, toggles de idioma/tema, enlaces, cabeceras del timeline.
 - **Sweep del CTA**: el botón de descarga rellena con un overlay direccional (`-translate-x-full` → `0`, `--ease-drawer`) al hover, con el texto invirtiendo color.
 - **Morph del icono de tema**: luna y sol apilados, rotan 90° y se funden con `--ease-in-out`.
-- **Grafo de git**: el panel de logros despliega con `grid-template-rows` a 260ms y `--ease-out`; el glifo `+`/`−` rota 180° al plegar.
+- **Grafo de git**: el panel de logros despliega con `grid-template-rows` **asimétrico** — 260ms al abrir (`--ease-out`, el contenido tarda en mostrarse), 200ms al cerrar (despeja la vista ya); el glifo `+`/`−` rota 180°. Los logros entran con fade + `translate` de 4px escalonados 30ms entre sí (sin delay al colapsar: salen con el contenedor, no en oleada); con `prefers-reduced-motion` el contenido aparece al instante y en print todos los bullets se fuerzan visibles aunque su entrada esté plegada.
 - **Cursor del `profile.ts`**: `.caret` parpadea a 1.1s con `steps(1, end)` — el único loop del sitio, y el primero en apagarse.
 - **Scroll suave**: `html { scroll-behavior: smooth }` solo dentro de `@media (prefers-reduced-motion: no-preference)`; los atajos del breadcrumb navegan sin mareo para quien lo pide.
 - **Punto de disponibilidad** (status bar): pulso `animate-pulse` de Tailwind, `motion-safe` — sin reduced-motion no late.

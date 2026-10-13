@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useLang } from "@/i18n/lang-context";
 import { COMPANY_COLORS } from "@/data/tech-colors";
 import { Section } from "./ui/Section";
@@ -13,11 +13,13 @@ function Entry({
   open,
   onToggle,
   toggleLabel,
+  index,
 }: {
   entry: ExperienceEntry;
   open: boolean;
   onToggle: () => void;
   toggleLabel: () => string;
+  index: number;
 }) {
   const { ref, visible } = useReveal<HTMLLIElement>("-60px");
 
@@ -26,7 +28,12 @@ function Entry({
   const companyColor = COMPANY_COLORS[entry.company] ?? "var(--brand)";
 
   return (
-    <li ref={ref} data-visible={visible} className="reveal relative pl-9 md:pl-12">
+    <li
+      ref={ref}
+      data-visible={visible}
+      style={{ transitionDelay: `${index * 60}ms` }}
+      className="reveal relative pl-9 md:pl-12"
+    >
       {/* Nodo del grafo de git: anillo en color de empresa; el HEAD
           va relleno con un halo suave de su color */}
       <span
@@ -44,20 +51,10 @@ function Entry({
             : {}),
         }}
       />
-      {/* Hover: borde en accent al 70% — ≥3:1 sobre tarjeta y fondo
-          en ambos temas (contraste de estado, WCAG 1.4.11) */}
-      <Panel
-        className={`transition-colors ${
-          open ? "" : "hover:border-accent/70"
-        }`}
-        style={
-          open
-            ? {
-                borderColor: `color-mix(in oklab, ${companyColor} 55%, transparent)`,
-              }
-            : undefined
-        }
-      >
+      {/* Hover (solo puntero fino, vía .panel-hover): borde al color de
+          empresa + elevación un rung. El hue viaja en --panel-hue; el
+          borde de la entrada abierta lo fija el style inline y manda. */}
+      <Panel hoverHue={companyColor}>
         <button
           type="button"
           onClick={onToggle}
@@ -111,17 +108,26 @@ function Entry({
             <span className="text-foreground">{entry.duration}</span>
           </p>
         </button>
-        {/* Logros: se despliegan dentro del panel con borde superior */}
+        {/* Logros: se despliegan dentro del panel con borde superior.
+            Entrada y salida asimétricas (260/200ms): abrir tarda en
+            mostrar contenido, cerrar debe despejar la vista ya. */}
         <div
-          className={`exp-panel grid transition-[grid-template-rows] duration-[260ms] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none ${
-            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          className={`exp-panel grid [transition-timing-function:var(--ease-out)] motion-reduce:transition-none ${
+            open
+              ? "grid-rows-[1fr] transition-[grid-template-rows] duration-[260ms]"
+              : "grid-rows-[0fr] transition-[grid-template-rows] duration-[200ms]"
           }`}
         >
           <ul className="overflow-hidden border-t border-rule">
-            {entry.bullets.map((bullet) => (
+            {entry.bullets.map((bullet, i) => (
               <li
                 key={bullet}
-                className="flex gap-4 px-4 py-[9px] text-detail text-muted md:px-5 md:[&:not(:last-child)]:border-b md:[&:not(:last-child)]:border-rule/60"
+                className={`flex gap-4 px-4 py-[9px] text-detail text-muted transition-[opacity,transform] duration-200 [transition-timing-function:var(--ease-out)] motion-reduce:transition-none md:px-5 md:[&:not(:last-child)]:border-b md:[&:not(:last-child)]:border-rule/60 ${
+                  /* Al colapsar no hay delay (style ausente): los bullets
+                     se van con el contenedor, no en oleada tras el cierre */
+                  open ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+                }`}
+                style={open ? { transitionDelay: `${i * 30}ms` } : undefined}
               >
                 {/* Cada bullet es una «línea agregada» del diff */}
                 <span aria-hidden className="mt-[12px] h-px w-4 shrink-0 bg-added" />
@@ -135,19 +141,40 @@ function Entry({
   );
 }
 
+/* Viewport estrecho como external store (patrón de theme-context):
+   el servidor snapshot «no estrecho» hidrata con la primera entrada
+   abierta; el cliente corrige sin setState dentro de un effect, y el
+   MediaQueryList se cachea para no recrearlo en cada snapshot. */
+let narrowMq: MediaQueryList | null = null;
+
+function getNarrowMq(): MediaQueryList {
+  narrowMq ??= window.matchMedia("(max-width: 767px)");
+  return narrowMq;
+}
+
+function subscribeNarrow(onChange: () => void) {
+  const mq = getNarrowMq();
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
 export default function ExperienceTimeline() {
   const { t } = useLang();
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   /* En pantallas estrechas el escaneo empieza con las tres entradas
      plegadas: la primera abierta empujaba el resto fuera de vista
-     (6 pantallas de bullets antes del segundo puesto). Se colapsa
-     tras la hidratación para no desincronizar el HTML del servidor. */
-  useEffect(() => {
-    if (window.matchMedia("(max-width: 767px)").matches) {
-      setOpenIdx(null);
-    }
-  }, []);
+     (6 pantallas de bullets antes del segundo puesto). Una vez el
+     usuario hace toggle, su elección manda sobre el viewport. */
+  const isNarrow = useSyncExternalStore(
+    subscribeNarrow,
+    () => getNarrowMq().matches,
+    () => false,
+  );
+  const [userChoice, setUserChoice] = useState<number | null | undefined>(
+    undefined,
+  );
+  const openIdx =
+    userChoice === undefined ? (isNarrow ? null : 0) : userChoice;
 
   return (
     <Section id="experience" title={t.sections.experience}>
@@ -158,8 +185,9 @@ export default function ExperienceTimeline() {
             <Entry
               key={`${entry.company}-${entry.role}`}
               entry={entry}
+              index={i}
               open={openIdx === i}
-              onToggle={() => setOpenIdx(openIdx === i ? null : i)}
+              onToggle={() => setUserChoice(openIdx === i ? null : i)}
               toggleLabel={() =>
                 `${openIdx === i ? t.experienceToggle.hide : t.experienceToggle.show} ${entry.role}`
               }

@@ -121,16 +121,14 @@ export default function Hero() {
                 </div>
               ))}
             </dl>
-            <dl
-              className="animate-rise mt-9 hidden grid-cols-3 gap-3 sm:grid"
-              style={{ animationDelay: "380ms" }}
-            >
+            <dl className="mt-9 hidden grid-cols-3 gap-3 sm:grid">
               {t.hero.kpis.map((kpi, i) => (
                 <Panel
                   key={kpi.label}
                   flat
                   hue={KPI_HUES[i] ?? "var(--rule)"}
-                  className="px-4 py-3"
+                  className="animate-rise px-4 py-3"
+                  style={{ animationDelay: `${380 + i * 60}ms` }}
                 >
                   <dt className="subhead">{kpi.label}</dt>
                   <dd className="mt-1 flex items-baseline gap-1">
