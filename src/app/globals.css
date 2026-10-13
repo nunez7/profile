@@ -405,6 +405,14 @@ body {
     grid-template-rows: 1fr !important;
   }
 
+  /* …y con todo el contenido revelado, aunque su sección nunca haya
+     entrado al viewport: la descarga no depende del scroll */
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
   .animate-rise,
   .name-underline {
     animation: none;

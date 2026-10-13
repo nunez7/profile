@@ -23,9 +23,10 @@ export default function Footer() {
       external: true,
     },
     {
+      /* Sin href: el número va enmascarado en el dict — un tel: con
+         «xx» sería un canal roto. Clicables solo email y LinkedIn. */
       label: contactLabels.phone,
       value: contact.phone,
-      href: `tel:${contact.phone.replace(/-/g, "")}`,
     },
     {
       label: contactLabels.location,
@@ -39,6 +40,24 @@ export default function Footer() {
         <h2 className="text-[25px] font-semibold tracking-[-0.02em] md:text-[31px]">
           {t.sections.contact}
         </h2>
+        {/* CTA de cierre: el reclutador convencido por el timeline actúa
+            aquí, sin volver 4000px al hero. Mismo tratamiento que el
+            botón primario; oculto en print (ya estás imprimiendo). */}
+        <div className="no-print mt-6">
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="press group relative overflow-hidden rounded-panel bg-accent px-6 py-3 text-lead font-medium text-accent-contrast"
+          >
+            <span
+              aria-hidden
+              className="absolute inset-0 -translate-x-full bg-foreground transition-transform duration-300 [transition-timing-function:var(--ease-drawer)] group-hover:translate-x-0 motion-reduce:transition-none"
+            />
+            <span className="relative transition-colors duration-200 group-hover:text-background">
+              {t.hero.ctaDownload}
+            </span>
+          </button>
+        </div>
         <dl className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item) => (
             <div key={item.label} className="border-t border-rule pt-4">

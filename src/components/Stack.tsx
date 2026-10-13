@@ -21,10 +21,17 @@ export default function Stack() {
       <div className="grid items-start gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
         {t.stack.map((group, i) => {
           const hue = STACK_HUES[group.id] ?? "var(--rule)";
+          /* Backend (8 items) ocupa dos filas: el grupo más alto
+             sostiene la tercera columna y elimina los huecos que
+             dejaba el auto-placement contra grupos de 3 items */
           return (
-            <Reveal key={group.id} delay={i * 60}>
+            <Reveal
+              key={group.id}
+              delay={i * 60}
+              className={group.id === "backend" ? "sm:row-span-2" : undefined}
+            >
               {/* Regla de categoría: 2px en el hue del grupo */}
-              <Panel className="overflow-hidden border-t-2" style={{ borderTopColor: hue }}>
+              <Panel flat hue={hue} className="overflow-hidden">
                 <h3 className="subhead border-b border-rule px-4 py-2.5">
                   {group.label}
                 </h3>

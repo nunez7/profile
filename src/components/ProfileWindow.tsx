@@ -24,7 +24,7 @@ export default function ProfileWindow() {
             <span className="size-[9px] rounded-full bg-rule" />
             <span className="size-[9px] rounded-full bg-rule" />
           </span>
-          <span className="ml-1 rounded-[4px] border border-b-2 border-rule border-b-accent bg-background px-2 py-0.5 font-mono text-[11px] text-foreground">
+          <span className="ml-1 rounded-panel border border-b-2 border-rule border-b-accent bg-background px-2 py-0.5 font-mono text-[11px] text-foreground">
             profile.ts
           </span>
         </div>

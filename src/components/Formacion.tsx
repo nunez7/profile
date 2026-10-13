@@ -9,19 +9,18 @@ export default function Formacion() {
 
   return (
     <Section id="education" title={t.sections.education}>
-      <Panel className="px-4 py-4 md:px-5">
-        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+      {/* Panel plano (estructura estática) con fecha | institución |
+          título en tres columnas — el contenido reparte el ancho del
+          contenedor en vez de dejar la mitad derecha vacía */}
+      <Panel flat className="px-4 py-4 md:px-5">
+        <div className="grid gap-x-6 gap-y-1 md:grid-cols-[8rem_minmax(0,1.2fr)_minmax(0,1fr)] md:items-baseline">
           <span className="font-mono text-meta text-muted">
             {t.education.date}
           </span>
-          <div>
-            <p className="text-lead font-semibold tracking-[-0.01em]">
-              {t.education.school}
-            </p>
-            <p className="mt-0.5 text-detail text-muted">
-              {t.education.degree}
-            </p>
-          </div>
+          <p className="text-lead font-semibold tracking-[-0.01em]">
+            {t.education.school}
+          </p>
+          <p className="text-detail text-muted">{t.education.degree}</p>
         </div>
       </Panel>
 

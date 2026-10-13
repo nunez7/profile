@@ -40,14 +40,14 @@ Marca: **ultravioleta** (`#4338F0` / `#8B80FF`). Cada tema está diseñado por s
 
 La elevación combina **borde + sombra con color de marca** (nunca gris neutro). Tokens en `:root`/`.dark`:
 
-- `--panel-radius: 6px` → utility `rounded-panel` — el único radio del sistema.
+- `--panel-radius: 6px` → utility `rounded-panel` — el único radio del sistema (CTA primario, toggle de tema y pestaña `profile.ts` incluidos).
 - `--panel-shadow` → `shadow-panel`: en claro, dos capas tintadas en ultravioleta al 7–10% — en el tema claro la sombra define la altura, así que los alfás pesan sobre el papel lavanda; en oscuro, `inset` de un pelo de luz en el canto superior (allí manda el borde).
 - `--elevated-shadow` → `shadow-elevated`: capa alta (`Panel elevated`), tinte más pronunciado (8–14%). Reservado al `profile.ts`.
 - Ambas sombras se anulan en print.
 
 La profundidad del claro es una decisión de escalera: papel lavanda (`#F1EFF9`) → tarjeta blanca → capa elevada casi blanca con sombra ancha. El papel va deliberadamente un punto más profundo que la tarjeta para que el blanco lea como elevación; los hairlines (`--rule`) se quedan en ~1.4:1 — visibles sin competir.
 
-El primitivo es `ui/Panel` (superficie + borde `rule` + radio + sombra). Todo bloque con estructura —KPIs, entradas del timeline, grupos del stack, la formación— se construye con él para que borde, radio y sombra sean idénticos en todo el sitio. El hover de un panel interactivo lleva el borde a `accent/70` (≥3:1 sobre tarjeta y fondo en ambos temas — contraste de estado, WCAG 1.4.11).
+El primitivo es `ui/Panel` (superficie + borde `rule` + radio, con la prop `hue` que dibuja la regla superior de 2px — mismo patrón en KPIs y grupos del stack). La elevación es jerárquica, no uniforme: **`flat`** (solo borde, sin sombra) para estructura estática —KPIs, grupos del stack, formación—; **`shadow-panel`** para las entradas interactivas del timeline, donde la sombra señala «clicable»; **`elevated`** para el `profile.ts`. El hover de un panel interactivo lleva el borde a `accent/70` (≥3:1 sobre tarjeta y fondo en ambos temas — contraste de estado, WCAG 1.4.11).
 
 ### Color temático (contenido, no decoración)
 
@@ -57,10 +57,10 @@ Tres sistemas de color ganados por el contenido, coherentes con el mundo «códi
 - **Hue por categoría** (`STACK_HUES`): la regla superior de cada panel del Stack (2px) lleva el hue semántico de su categoría — integración cian, cloud violeta, backend naranja, frontend azul, prácticas esmeralda.
 - **Syntax highlighting del `profile.ts`**: keyword (`interface`) en accent, identificadores en foreground, strings en `--added` (verde), puntuación en muted. Es texto, no decoración — por eso reutiliza la paleta semántica y no colores nuevos.
 - **Semántica git diff**: los marcadores de cada logro son líneas agregadas → verdes (`--added`); el toggle `+` es verde y el `−` rojo, con el glifo rotando al plegar.
-- **Empresas diferenciadas** (`COMPANY_COLORS`): cada nodo del timeline tiñe anillo, hash y badge HEAD con el color de su empresa (VASS → marca, Universidad → cloud). El HEAD va relleno con halo suave del mismo color; el rail se enciende en marca hacia arriba (`.exp-rail`).
+- **Empresas diferenciadas** (`COMPANY_COLORS`): cada nodo del timeline tiñe anillo, hash y badge HEAD con el color de su empresa (VASS → marca índigo, Universidad → cian — hashes bien separados en el grafo). El HEAD va relleno con halo suave del mismo color; el rail se enciende en marca hacia arriba (`.exp-rail`).
 - **KPIs con color por métrica**: experiencia → marca, trayectoria → backend, certificaciones → prácticas (borde superior + cifra en el color).
 
-Reglas del acento: la marca se gasta en el CTA primario, foco, hovers de enlace, el hash del commit actual y el rail hacia HEAD. Nada más.
+Reglas del acento: la marca es el color de la acción y del estado activo. Se gasta en el CTA primario, el anillo de foco, los hovers de enlace, el hash del commit actual y el rail hacia HEAD; y — decisión explícita de 2026 que sustituye al «nada más» anterior — en el punto del logo `FJN.`, la ruta activa del breadcrumb y su `●`, el subrayado del idioma seleccionado, el caret y el `$`/`interface` del `profile.ts`, y la cifra del KPI «experiencia». Cada gasto es identidad de herramienta; el CTA sigue siendo el único elemento relleno de la página.
 
 ### Textura del hero
 
@@ -92,7 +92,7 @@ Display: nombre en hero `clamp(2.6rem, 8.5vw, 4.75rem)` Bold (700), tracking `-0
 ## Layout
 
 - `--container-cv: 1080px` → utility `max-w-cv`, consumido por `ui/Container` (gutter `px-6`/`md:px-10`).
-- Alineación: una sola columna fuerte a la izquierda como base; nada centrado. **Excepción deliberada**: el hero es una grilla asimétrica `1.05fr / 0.95fr` en `lg` (identidad + KPIs a la izquierda, ventana `profile.ts` a la derecha); en móvil el `profile.ts` cae debajo de los CTAs.
+- Alineación: una sola columna fuerte a la izquierda como base; nada centrado. **Excepción deliberada**: el hero es una grilla asimétrica `1.05fr / 0.95fr` en `lg` (identidad + KPIs a la izquierda, ventana `profile.ts` a la derecha); en móvil el `profile.ts` cae debajo de los CTAs. Síntesis usa una grilla `1fr / 15rem` en `lg`: párrafo `58ch` a la izquierda y un aside con hairline izquierdo (disponibilidad, ubicación, enfoque) a la derecha; en móvil el aside cae debajo con hairline superior. Ambos hijos de la grilla del hero llevan `min-w-0`: el ancho lo pone la grilla, nunca el contenido monospace.
 - Secciones separadas por `border-t border-rule`; más espacio encima del título que debajo (`py-14/20` + `mt-8/10`). Cada sección ancla con `id` + `scroll-mt-24` para el scrollspy.
 
 ## Componentes (`src/components/ui/`)
@@ -101,14 +101,14 @@ Display: nombre en hero `clamp(2.6rem, 8.5vw, 4.75rem)` Bold (700), tracking `-0
 |---|---|---|
 | `Container` | Ancho de contenido y gutter del proyecto | 6 |
 | `Section` | Regla + título display + contenido (+ `id` para anclas) | 5 |
-| `Panel` | Superficie elevada: borde `rule`, radio 6px, sombra viva (+ variante `elevated`) | 7 |
-| `TextLink` | Enlace de texto, underline `rule` → `accent` en hover | 5 |
+| `Panel` | Superficie con elevación jerárquica: `flat` (estructura estática, solo borde), sombra viva (entradas interactivas), `elevated` (hero); prop `hue` para regla de categoría | 13 |
+| `TextLink` | Enlace de texto, underline `rule` → `accent` en hover; variante `quiet` (muted hasta hover) para junto al CTA primario | 5 |
 | `Reveal` / `useReveal` | Revelado por scroll, una sola vez | — |
 | `useScrollSpy` | Sección activa según scroll (umbrales del header) | 1 |
 
 Patrón de clase (no componente): `.subhead` — mono 13px muted para etiquetas de categoría, aplicable a `h3`/`dt` sin forzar el tag.
 
-Componentes de página: `Header` (lang + theme toggle + `Breadcrumb`), `Hero` (+ `ProfileWindow`), `Stack`, `ExperienceTimeline` (grafo de git), `Formacion`, `Footer`, `StatusBar`. Contenido tipado en `src/i18n/dict.ts` (ES/EN); los componentes nunca hardcodean copy — ni siquiera el contenido del bloque `profile.ts`, que vive en `hero.code`, ni los hashes cosméticos del timeline.
+Componentes de página: `Header` (lang + theme toggle + `Breadcrumb`), `Hero` (+ `ProfileWindow`), `Stack`, `ExperienceTimeline` (grafo de git), `Formacion`, `Footer` (CTA de cierre; teléfono como texto — el número va enmascarado, sin `tel:`), `StatusBar`. Contenido tipado en `src/i18n/dict.ts` (ES/EN); los componentes nunca hardcodean copy — ni siquiera el contenido del bloque `profile.ts`, que vive en `hero.code`, ni los hashes cosméticos del timeline.
 
 ### Chrome de herramienta
 
@@ -120,9 +120,9 @@ Dos dispositivos envuelven la página como un editor, ambos `no-print`:
 ### Dispositivos de contenido
 
 - **`ProfileWindow`**: ventana de editor (semáforo + pestaña `profile.ts`) con `$ cat profile.ts` y una `interface Profile` con syntax highlighting. Alineación de propiedades por padding mono; caret que parpadea al final del `status`.
-- **Timeline tipo `git log`**: cada entrada es un panel con hash corto (cosmético, determinístico) en accent, badge `HEAD → main` en el rol actual, y el toggle `+`/`−` de diff. Los logros se despliegan dentro del panel con borde superior.
+- **Timeline tipo `git log`**: cada entrada es un panel con hash corto (cosmético, determinístico) en accent, badge `HEAD → main` en el rol actual, y el toggle `+`/`−` de diff. Los logros se despliegan dentro del panel con borde superior. La primera entrada nace abierta en desktop; en móvil (<768px) todas nacen plegadas — el escaneo ve los tres puestos sin hacer scroll.
 - **Stack tipo manifiesto**: cada grupo es un panel con filas alineadas — punto de color de marca, nombre (lead si es `primary`, muted si no) y hue de categoría como regla superior.
-- **KPIs del hero**: tres paneles con borde superior en el color de su métrica, label mono (`subhead`), cifra display 28px en color y unidad mono muted.
+- **KPIs del hero**: label mono (`subhead`), cifra display 28px en color de su métrica y unidad mono muted. En `sm+`, tres paneles `flat` con borde superior en ese color; en `<sm`, filas hairline (label a la izquierda, cifra a la derecha, separadas por `border-rule`) — tres paneles apilados costaban ~280px y empujaban `profile.ts` a la tercera pantalla.
 
 ## Movimiento
 
@@ -145,8 +145,8 @@ Selección de texto (`accent` 24%), caret heredado, scrollbar (`rule`, thin), fo
 
 ## Print / PDF
 
-`window.print()` → "Descargar CV": header, breadcrumb, status bar y CTAs ocultos (`.no-print`), toggles `+/−` ocultos, **todos los logros expandidos** (`.exp-panel`), contacto visible en el hero (`.print:block`), paleta forzada a clara, `@page margin: 14mm`, `print-color-adjust: exact`, `--panel-shadow: none` (los paneles quedan solo con borde) y `body` sin el padding de la status bar. El bloque `profile.ts` **sí se imprime**: es contenido, no chrome.
+`window.print()` → "Descargar CV": header, breadcrumb, status bar y CTAs ocultos (`.no-print`), toggles `+/−` ocultos, **todos los logros expandidos** (`.exp-panel`), **todos los bloques revelados visibles** (`.reveal` forzado a `opacity: 1` — el PDF nunca depende del scroll), contacto visible en el hero (`.print:block`), paleta forzada a clara, `@page margin: 14mm`, `print-color-adjust: exact`, `--panel-shadow: none` (los paneles quedan solo con borde) y `body` sin el padding de la status bar. El bloque `profile.ts` **sí se imprime**: es contenido, no chrome.
 
 ## Accesibilidad
 
-Contraste AA en ambos temas, verificado por `npm run check:contrast` (pares de texto ≥4.5:1, estados ≥3:1); `aria-pressed` (idioma), `aria-expanded` + `aria-label` (toggle de logros), `aria-label` (tema), `role="group"` (selector de idioma), `aria-label` en el `nav` del breadcrumb con `aria-current="location"` en la ruta y en la sección activa; la status bar es `aria-hidden` (ambiente, no información). Landmarks `main`/`header`/`footer`/`nav`, JSON-LD `Person` en `page.tsx`.
+Contraste AA en ambos temas, verificado por `npm run check:contrast` (pares de texto ≥4.5:1, estados ≥3:1); `aria-pressed` (idioma), `aria-expanded` + `aria-label` (toggle de logros), `aria-label` (tema), `role="group"` (selector de idioma), `aria-label` en el `nav` del breadcrumb con `aria-current="location"` en la ruta y en la sección activa; la status bar es `aria-hidden` (ambiente, no información). Landmarks `main`/`header`/`footer`/`nav`, skip-to-content como primera parada de teclado (ancla `#main-content`), JSON-LD `Person` en `page.tsx`.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLang } from "@/i18n/lang-context";
 import { COMPANY_COLORS } from "@/data/tech-colors";
 import { Section } from "./ui/Section";
@@ -138,6 +138,16 @@ function Entry({
 export default function ExperienceTimeline() {
   const { t } = useLang();
   const [openIdx, setOpenIdx] = useState<number | null>(0);
+
+  /* En pantallas estrechas el escaneo empieza con las tres entradas
+     plegadas: la primera abierta empujaba el resto fuera de vista
+     (6 pantallas de bullets antes del segundo puesto). Se colapsa
+     tras la hidratación para no desincronizar el HTML del servidor. */
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      setOpenIdx(null);
+    }
+  }, []);
 
   return (
     <Section id="experience" title={t.sections.experience}>

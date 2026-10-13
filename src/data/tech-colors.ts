@@ -50,9 +50,10 @@ export const STACK_HUES: Record<string, string> = {
 /**
  * Color de empresa para el nodo del timeline (nodo, hash y badge
  * HEAD). Keyed por el nombre exacto de la empresa en el dict —
- * idéntico en ES y EN. VASS (marca) contra Universidad (cloud).
+ * idéntico en ES y EN. VASS (marca, índigo) contra Universidad (cian):
+ * los dos hashes del grafo se distinguen de un vistazo.
  */
 export const COMPANY_COLORS: Record<string, string> = {
   "VASS LATAM": "var(--brand)",
-  "Universidad Tecnológica de La Costa": "var(--cat-cloud)",
+  "Universidad Tecnológica de La Costa": "var(--cat-integration)",
 };

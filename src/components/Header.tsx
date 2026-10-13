@@ -69,7 +69,7 @@ export default function Header() {
 
   return (
     <header className="no-print sticky top-0 z-10">
-      <div className="border-b border-rule bg-background/90 backdrop-blur-sm">
+      <div className="border-b border-rule bg-background/95 backdrop-blur-sm">
         <Container className="flex h-14 items-center justify-between">
           <a
             href="#top"
@@ -111,7 +111,7 @@ export default function Header() {
               aria-label={
                 theme === "light" ? t.header.themeToDark : t.header.themeToLight
               }
-              className="press flex size-8 items-center justify-center border border-rule text-muted transition-colors hover:border-accent hover:text-accent"
+              className="press flex size-8 items-center justify-center rounded-panel border border-rule text-muted transition-colors hover:border-accent hover:text-accent"
             >
               <ThemeIcon theme={theme} />
             </button>

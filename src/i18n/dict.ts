@@ -31,6 +31,7 @@ export type Dict = {
   nav: {
     ariaLabel: string;
     home: string;
+    skip: string;
   };
   hero: {
     role: string;
@@ -66,6 +67,10 @@ export type Dict = {
     contact: string;
   };
   summary: string;
+  summaryAside: {
+    location: string;
+    focus: string;
+  };
   stack: StackGroup[];
   experience: ExperienceEntry[];
   experienceToggle: {
@@ -107,6 +112,7 @@ export const dict: Record<Lang, Dict> = {
     nav: {
       ariaLabel: "Secciones del CV",
       home: "inicio.md",
+      skip: "Saltar al contenido",
     },
     hero: {
       role: "Ingeniero IT · Lead Full Stack",
@@ -142,6 +148,10 @@ export const dict: Record<Lang, Dict> = {
     },
     summary:
       "Ingeniero IT & Lead Full Stack con +8 años de experiencia diseñando e integrando soluciones empresariales en la nube. Actualmente lidero equipos en VASS LATAM, combinando la gestión técnica con decisiones de arquitectura, revisión de código y diseño de sistemas. Especializado en Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) y frontend moderno (Next.js, React, TypeScript). Enfocado en entregar arquitecturas escalables, seguras y de alto rendimiento, optimizando el ciclo de desarrollo mediante la integración de IA.",
+    summaryAside: {
+      location: "Ubicación",
+      focus: "Enfoque",
+    },
     stack: [
       {
         id: "integration",
@@ -269,12 +279,12 @@ export const dict: Record<Lang, Dict> = {
     ],
     languages: [
       { name: "Español", level: "Nativo" },
-      { name: "Inglés", level: "Intermedio — Limited Working Proficiency" },
+      { name: "Inglés", level: "Intermedio" },
     ],
     contact: {
       email: "felixjavier0@gmail.com",
-      phone: "323-104-5265",
-      location: "Santiago Ixcuintla, Nayarit, México",
+      phone: "(+52) 323-104-52xx",
+      location: "Nayarit, México",
       linkedin: "linkedin.com/in/felix-nunezg",
     },
     contactLabels: {
@@ -294,6 +304,7 @@ export const dict: Record<Lang, Dict> = {
     nav: {
       ariaLabel: "CV sections",
       home: "home.md",
+      skip: "Skip to content",
     },
     hero: {
       role: "IT Engineer · Full Stack Lead",
@@ -329,6 +340,10 @@ export const dict: Record<Lang, Dict> = {
     },
     summary:
       "IT Engineer & Full Stack Lead with 8+ years of experience designing and integrating enterprise solutions in the cloud. Currently leading teams at VASS LATAM, combining hands-on technical management with architecture decisions, code review and system design. Specialized in Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) and modern frontend (Next.js, React, TypeScript). Focused on delivering scalable, secure, high-performance architectures while speeding up the development cycle with AI.",
+    summaryAside: {
+      location: "Location",
+      focus: "Focus",
+    },
     stack: [
       {
         id: "integration",
@@ -455,12 +470,12 @@ export const dict: Record<Lang, Dict> = {
     ],
     languages: [
       { name: "Spanish", level: "Native" },
-      { name: "English", level: "Intermediate — Limited Working Proficiency" },
+      { name: "English", level: "Intermediate (B2)" },
     ],
     contact: {
       email: "felixjavier0@gmail.com",
-      phone: "323-104-5265",
-      location: "Santiago Ixcuintla, Nayarit, Mexico",
+      phone: "323-104-52xx",
+      location: "Nayarit, Mexico",
       linkedin: "linkedin.com/in/felix-nunezg",
     },
     contactLabels: {

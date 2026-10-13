@@ -44,7 +44,7 @@ export default function Breadcrumb() {
   return (
     <nav
       aria-label={t.nav.ariaLabel}
-      className="no-print border-t border-rule bg-background/90 backdrop-blur-sm"
+      className="no-print border-t border-rule bg-background/95 backdrop-blur-sm"
     >
       <div className="mx-auto flex h-8 w-full max-w-cv items-center justify-between px-6 md:px-10">
         {/* Ruta activa */}

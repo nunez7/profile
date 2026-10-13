@@ -36,9 +36,12 @@ export default function Hero() {
           className="name-underline mt-4 block h-[7px] w-full max-w-[34rem] rounded-full"
         />
 
+        {/* min-w-0 en ambos hijos: el contenido monospace (profile.ts,
+            cifras KPI) no puede forzar la columna más allá del viewport
+            — en móvil el ancho lo pone la grilla, no el contenido */}
         <div className="mt-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-14">
           {/* Columna izquierda: identidad, CTAs y KPIs */}
-          <div>
+          <div className="min-w-0">
             <p
               className="animate-rise text-lead font-medium"
               style={{ animationDelay: "160ms" }}
@@ -63,11 +66,13 @@ export default function Hero() {
               className="no-print animate-rise mt-8 flex flex-wrap items-center gap-x-6 gap-y-3"
               style={{ animationDelay: "300ms" }}
             >
-              {/* CTA primario: barrido direccional al hover, press al tocar */}
+              {/* CTA primario: barrido direccional al hover, press al
+                  tocar. Tamaño lead — es la acción de conversión, debe
+                  pesar más que los enlaces secundarios (quiet) */}
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="press group relative overflow-hidden bg-accent px-5 py-2.5 text-detail font-medium text-accent-contrast"
+                className="press group relative overflow-hidden rounded-panel bg-accent px-6 py-3 text-lead font-medium text-accent-contrast"
               >
                 <span
                   aria-hidden
@@ -77,25 +82,55 @@ export default function Hero() {
                   {t.hero.ctaDownload}
                 </span>
               </button>
-              <TextLink href={`mailto:${t.contact.email}`}>
+              <TextLink href={`mailto:${t.contact.email}`} quiet>
                 {t.hero.ctaEmail}
               </TextLink>
-              <TextLink href={LINKEDIN_URL} external>
+              <TextLink href={LINKEDIN_URL} external quiet>
                 {t.hero.ctaLinkedin}
               </TextLink>
             </div>
 
-            {/* KPIs: paneles de datos, label mono + cifra display.
-                Cada métrica lleva su color: marca/trayectoria/certs */}
+            {/* KPIs: en <sm, filas hairline (label mono izquierda,
+                cifra derecha) — tres paneles apilados costaban ~280px y
+                empujaban profile.ts a la tercera pantalla. En sm+,
+                paneles flat con regla hue por métrica. El markup oculto
+                sale del árbol de accesibilidad por display:none */}
             <dl
-              className="animate-rise mt-9 grid grid-cols-3 gap-3"
+              className="animate-rise mt-9 border-t border-rule sm:hidden"
+              style={{ animationDelay: "380ms" }}
+            >
+              {t.hero.kpis.map((kpi, i) => (
+                <div
+                  key={kpi.label}
+                  className="flex items-baseline justify-between gap-3 border-b border-rule py-2.5"
+                >
+                  <dt className="subhead">{kpi.label}</dt>
+                  <dd className="flex items-baseline gap-1">
+                    <span
+                      className="text-[28px] font-semibold leading-none tracking-[-0.02em]"
+                      style={{ color: KPI_HUES[i] ?? "var(--foreground)" }}
+                    >
+                      {kpi.value}
+                    </span>
+                    {kpi.unit && (
+                      <span className="font-mono text-meta text-muted">
+                        {kpi.unit}
+                      </span>
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <dl
+              className="animate-rise mt-9 hidden grid-cols-3 gap-3 sm:grid"
               style={{ animationDelay: "380ms" }}
             >
               {t.hero.kpis.map((kpi, i) => (
                 <Panel
                   key={kpi.label}
-                  className="border-t-2 px-4 py-3"
-                  style={{ borderTopColor: KPI_HUES[i] ?? "var(--rule)" }}
+                  flat
+                  hue={KPI_HUES[i] ?? "var(--rule)"}
+                  className="px-4 py-3"
                 >
                   <dt className="subhead">{kpi.label}</dt>
                   <dd className="mt-1 flex items-baseline gap-1">
@@ -117,7 +152,9 @@ export default function Hero() {
           </div>
 
           {/* Columna derecha: ventana profile.ts */}
-          <ProfileWindow />
+          <div className="min-w-0">
+            <ProfileWindow />
+          </div>
         </div>
       </Container>
     </section>
