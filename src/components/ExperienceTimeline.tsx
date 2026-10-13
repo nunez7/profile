@@ -44,9 +44,11 @@ function Entry({
             : {}),
         }}
       />
+      {/* Hover: borde en accent al 70% — ≥3:1 sobre tarjeta y fondo
+          en ambos temas (contraste de estado, WCAG 1.4.11) */}
       <Panel
         className={`transition-colors ${
-          open ? "" : "hover:border-accent/40"
+          open ? "" : "hover:border-accent/70"
         }`}
         style={
           open

@@ -12,13 +12,13 @@ Marca: **ultravioleta** (`#4338F0` / `#8B80FF`). Cada tema está diseñado por s
 
 | Token | Claro | Oscuro | Rol |
 |---|---|---|---|
-| `--background` | `#F5F4FA` | `#12101F` | Fondo de página (papel lavanda / negro tintado índigo) |
+| `--background` | `#F1EFF9` | `#12101F` | Fondo de página (papel lavanda / negro tintado índigo) |
 | `--surface` | `#FFFFFF` | `#1A1730` | Superficie de panel (KPIs, timeline, stack) |
 | `--surface-elevated` | `#FCFBFF` | `#221E3C` | Capa alta: ventana `profile.ts` del hero |
 | `--foreground` | `#16142A` | `#ECEAF6` | Texto principal (tinta índigo) |
-| `--muted` | `#565170` | `#A29DC0` | Texto secundario (6.8:1 / 7.3:1) |
-| `--rule` | `#E4E1F0` | `#2B2745` | Hairlines, divisores, bordes |
-| `--brand` | `#4338F0` | `#8B80FF` | Color de marca (6.9:1 / 5.5:1 sobre superficie) |
+| `--muted` | `#565170` | `#A29DC0` | Texto secundario (6.6:1 / 7.3:1 sobre fondo) |
+| `--rule` | `#DAD6EC` | `#2B2745` | Hairlines, divisores, bordes |
+| `--brand` | `#4338F0` | `#8B80FF` | Color de marca (6.0–6.9:1 claro / 5.0–5.9:1 oscuro) |
 | `--accent` | `var(--brand)` | `var(--brand)` | Alias de marca para utilities (`text-accent`, foco) |
 | `--accent-contrast` | `#FFFFFF` | `#14122A` | Texto sobre acento sólido (5.8:1) |
 | `--added` | `#047857` | `#34D399` | Git: «línea agregada» (marcadores de logros, `+`, strings) |
@@ -28,24 +28,26 @@ Marca: **ultravioleta** (`#4338F0` / `#8B80FF`). Cada tema está diseñado por s
 
 | Token | Claro | Oscuro | Categoría |
 |---|---|---|---|
-| `--cat-integration` | `#0E7FA8` | `#2FB6DB` | Integración (cian) |
+| `--cat-integration` | `#0D759D` | `#2FB6DB` | Integración (cian) |
 | `--cat-cloud` | `#6D28D9` | `#A78BFA` | Cloud (violeta) |
 | `--cat-backend` | `#C2410C` | `#FB923C` | Backend (naranja) |
 | `--cat-frontend` | `#1D4ED8` | `#60A5FA` | Frontend (azul) |
 | `--cat-practices` | `#047857` | `#34D399` | Prácticas (esmeralda) |
 
-`STACK_HUES` y `COMPANY_COLORS` (`src/data/tech-colors.ts`) devuelven estas vars, así que los componentes no conocen hex. Los 18 pares texto/superficie clave pasan AA (≥4.5:1) verificado por script.
+`STACK_HUES` y `COMPANY_COLORS` (`src/data/tech-colors.ts`) devuelven estas vars, así que los componentes no conocen hex. El contraste se verifica por script — `npm run check:contrast` (`scripts/check-contrast.mjs`, Node sin dependencias): parsea `globals.css` (claro, oscuro y el override de print), resuelve las vars y exige **≥4.5:1** para pares de texto y **≥3:1** para estados de interacción (borde hover compuesto, anillo de foco); falla con código 1 si algún par baja del umbral.
 
 ### Superficie y elevación (tres capas con sombra tintada)
 
 La elevación combina **borde + sombra con color de marca** (nunca gris neutro). Tokens en `:root`/`.dark`:
 
 - `--panel-radius: 6px` → utility `rounded-panel` — el único radio del sistema.
-- `--panel-shadow` → `shadow-panel`: en claro, dos capas tintadas en ultravioleta al 5–6%; en oscuro, `inset` de un pelo de luz en el canto superior (allí manda el borde).
-- `--elevated-shadow` → `shadow-elevated`: capa alta (`Panel elevated`), tinte más pronunciado. Reservado al `profile.ts`.
+- `--panel-shadow` → `shadow-panel`: en claro, dos capas tintadas en ultravioleta al 7–10% — en el tema claro la sombra define la altura, así que los alfás pesan sobre el papel lavanda; en oscuro, `inset` de un pelo de luz en el canto superior (allí manda el borde).
+- `--elevated-shadow` → `shadow-elevated`: capa alta (`Panel elevated`), tinte más pronunciado (8–14%). Reservado al `profile.ts`.
 - Ambas sombras se anulan en print.
 
-El primitivo es `ui/Panel` (superficie + borde `rule` + radio + sombra). Todo bloque con estructura —KPIs, entradas del timeline, grupos del stack, la formación— se construye con él para que borde, radio y sombra sean idénticos en todo el sitio. El hover de un panel interactivo lleva el borde a `accent` con alpha.
+La profundidad del claro es una decisión de escalera: papel lavanda (`#F1EFF9`) → tarjeta blanca → capa elevada casi blanca con sombra ancha. El papel va deliberadamente un punto más profundo que la tarjeta para que el blanco lea como elevación; los hairlines (`--rule`) se quedan en ~1.4:1 — visibles sin competir.
+
+El primitivo es `ui/Panel` (superficie + borde `rule` + radio + sombra). Todo bloque con estructura —KPIs, entradas del timeline, grupos del stack, la formación— se construye con él para que borde, radio y sombra sean idénticos en todo el sitio. El hover de un panel interactivo lleva el borde a `accent/70` (≥3:1 sobre tarjeta y fondo en ambos temas — contraste de estado, WCAG 1.4.11).
 
 ### Color temático (contenido, no decoración)
 
@@ -147,4 +149,4 @@ Selección de texto (`accent` 24%), caret heredado, scrollbar (`rule`, thin), fo
 
 ## Accesibilidad
 
-Contraste AA en ambos temas; `aria-pressed` (idioma), `aria-expanded` + `aria-label` (toggle de logros), `aria-label` (tema), `role="group"` (selector de idioma), `aria-label` en el `nav` del breadcrumb con `aria-current="location"` en la ruta y en la sección activa; la status bar es `aria-hidden` (ambiente, no información). Landmarks `main`/`header`/`footer`/`nav`, JSON-LD `Person` en `page.tsx`.
+Contraste AA en ambos temas, verificado por `npm run check:contrast` (pares de texto ≥4.5:1, estados ≥3:1); `aria-pressed` (idioma), `aria-expanded` + `aria-label` (toggle de logros), `aria-label` (tema), `role="group"` (selector de idioma), `aria-label` en el `nav` del breadcrumb con `aria-current="location"` en la ruta y en la sección activa; la status bar es `aria-hidden` (ambiente, no información). Landmarks `main`/`header`/`footer`/`nav`, JSON-LD `Person` en `page.tsx`.

@@ -15,13 +15,15 @@
    tiñe los negros hacia la marca.
 ------------------------------------------------------------------ */
 :root {
-  /* Capas de superficie: papel lavanda → tarjeta → elevado */
-  --background: #f5f4fa; /* tinte lavanda cálido, no gris frío */
+  /* Capas de superficie: papel lavanda → tarjeta → elevado. El papel
+     va un punto más profundo que la tarjeta para que el blanco lea
+     como elevación — la sombra tintada hace el resto del trabajo. */
+  --background: #f1eff9; /* tinte lavanda cálido, no gris frío */
   --surface: #ffffff;
   --surface-elevated: #fcfbff;
   --foreground: #16142a; /* tinta índigo (AA sobre fondo y tarjeta) */
-  --muted: #565170; /* 6.7:1 sobre --background */
-  --rule: #e4e1f0; /* hairlines, divisores */
+  --muted: #565170; /* 6.6:1 sobre --background */
+  --rule: #dad6ec; /* hairlines, divisores */
 
   /* Marca */
   --brand: #4338f0; /* 6.8:1 sobre blanco */
@@ -30,7 +32,7 @@
   --accent-contrast: var(--brand-contrast);
 
   /* Acentos semánticos por categoría (saturados para tema claro) */
-  --cat-integration: #0e7fa8;
+  --cat-integration: #0d759d;
   --cat-cloud: #6d28d9;
   --cat-backend: #c2410c;
   --cat-frontend: #1d4ed8;
@@ -45,13 +47,15 @@
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-  /* Elevación: sombras tintadas en la marca, nunca gris neutro */
+  /* Elevación: sombras tintadas en la marca, nunca gris neutro.
+     En claro la sombra define la altura: alfas lo bastante altos
+     para que el panel pese sobre el papel lavanda. */
   --panel-shadow:
-    0 1px 2px rgb(67 56 240 / 0.05),
-    0 6px 20px rgb(67 56 240 / 0.06);
+    0 1px 2px rgb(67 56 240 / 0.07),
+    0 8px 24px rgb(67 56 240 / 0.1);
   --elevated-shadow:
-    0 2px 4px rgb(67 56 240 / 0.06),
-    0 14px 34px rgb(67 56 240 / 0.1);
+    0 2px 4px rgb(67 56 240 / 0.08),
+    0 18px 40px rgb(67 56 240 / 0.14);
 
   /* Textura del hero: grid hairline + ruido de papel */
   --hero-grid-line: rgb(67 56 240 / 0.06);
@@ -372,10 +376,10 @@ body {
     --surface-elevated: #ffffff;
     --foreground: #16142a;
     --muted: #565170;
-    --rule: #e4e1f0;
+    --rule: #dad6ec;
     --brand: #4338f0;
     --brand-contrast: #ffffff;
-    --cat-integration: #0e7fa8;
+    --cat-integration: #0d759d;
     --cat-cloud: #6d28d9;
     --cat-backend: #c2410c;
     --cat-frontend: #1d4ed8;
