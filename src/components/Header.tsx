@@ -4,6 +4,7 @@ import { useLang } from "@/i18n/lang-context";
 import { useTheme, type Theme } from "@/theme/theme-context";
 import { langs } from "@/i18n/dict";
 import { Container } from "./ui/Container";
+import Breadcrumb from "./Breadcrumb";
 
 const ICON = "size-4";
 
@@ -67,54 +68,57 @@ export default function Header() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="no-print sticky top-0 z-10 border-b border-rule bg-background/90 backdrop-blur-sm">
-      <Container className="flex h-14 items-center justify-between">
-        <a
-          href="#top"
-          className="font-mono text-sm font-medium tracking-tight text-foreground"
-        >
-          FJN<span className="text-accent">.</span>
-        </a>
-        <div className="flex items-center gap-3">
-          <div
-            className="flex items-center gap-1"
-            role="group"
-            aria-label="Idioma / Language"
+    <header className="no-print sticky top-0 z-10">
+      <div className="border-b border-rule bg-background/90 backdrop-blur-sm">
+        <Container className="flex h-14 items-center justify-between">
+          <a
+            href="#top"
+            className="font-mono text-sm font-medium tracking-tight text-foreground"
           >
-            {langs.map((l, i) => (
-              <span key={l} className="flex items-center gap-1">
-                {i > 0 && (
-                  <span aria-hidden className="text-rule">
-                    /
-                  </span>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setLang(l)}
-                  aria-pressed={lang === l}
-                  className={`press px-1.5 py-0.5 font-mono text-meta transition-colors ${
-                    lang === l
-                      ? "text-foreground underline decoration-accent decoration-2 underline-offset-4"
-                      : "text-muted hover:text-foreground"
-                  }`}
-                >
-                  {l}
-                </button>
-              </span>
-            ))}
+            FJN<span className="text-accent">.</span>
+          </a>
+          <div className="flex items-center gap-3">
+            <div
+              className="flex items-center gap-1"
+              role="group"
+              aria-label="Idioma / Language"
+            >
+              {langs.map((l, i) => (
+                <span key={l} className="flex items-center gap-1">
+                  {i > 0 && (
+                    <span aria-hidden className="text-rule">
+                      /
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setLang(l)}
+                    aria-pressed={lang === l}
+                    className={`press px-1.5 py-0.5 font-mono text-meta transition-colors ${
+                      lang === l
+                        ? "text-foreground underline decoration-accent decoration-2 underline-offset-4"
+                        : "text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {l}
+                  </button>
+                </span>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={
+                theme === "light" ? t.header.themeToDark : t.header.themeToLight
+              }
+              className="press flex size-8 items-center justify-center border border-rule text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              <ThemeIcon theme={theme} />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label={
-              theme === "light" ? t.header.themeToDark : t.header.themeToLight
-            }
-            className="press flex size-8 items-center justify-center border border-rule text-muted transition-colors hover:border-accent hover:text-accent"
-          >
-            <ThemeIcon theme={theme} />
-          </button>
-        </div>
-      </Container>
+        </Container>
+      </div>
+      <Breadcrumb />
     </header>
   );
 }

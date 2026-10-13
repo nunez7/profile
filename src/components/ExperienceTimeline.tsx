@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLang } from "@/i18n/lang-context";
 import { Section } from "./ui/Section";
+import { Panel } from "./ui/Panel";
 import { useReveal } from "./ui/use-reveal";
 import type { ExperienceEntry } from "@/i18n/dict";
 
@@ -20,76 +21,84 @@ function Entry({
   const { ref, visible } = useReveal<HTMLLIElement>("-60px");
 
   return (
-    <li
-      ref={ref}
-      data-visible={visible}
-      className="reveal relative pl-9 md:pl-12"
-    >
+    <li ref={ref} data-visible={visible} className="reveal relative pl-9 md:pl-12">
+      {/* Nodo del grafo de git */}
       <span
         aria-hidden
-        className={`absolute left-0 top-[9px] size-[15px] rounded-full border-2 border-accent ${
+        className={`absolute left-0 top-[19px] size-[15px] rounded-full border-2 border-accent ${
           entry.head ? "bg-accent" : "bg-background"
         }`}
       />
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-label={toggleLabel()}
-        className="press group block w-full cursor-pointer text-left"
-      >
-        <div className="flex flex-wrap items-baseline gap-x-3">
-          <h3 className="text-[21px] font-semibold tracking-[-0.015em] md:text-[24px]">
-            {entry.role}
-          </h3>
-          {entry.head && (
-            <span className="font-mono text-[11px] text-accent">HEAD</span>
-          )}
-          {/* Diff: + agrega líneas (verde), − las quita (rojo) */}
-          <span
-            aria-hidden
-            className={`ml-auto select-none font-mono text-[15px] leading-none transition-colors group-hover:text-foreground print:hidden ${
-              open ? "text-removed" : "text-added"
-            }`}
-          >
-            <span
-              className={`diff-glyph inline-block ${open ? "rotate-180" : ""}`}
-            >
-              {open ? "−" : "+"}
-            </span>
-          </span>
-        </div>
-        <p className="mt-1 font-mono text-meta text-muted">
-          <span className="text-foreground">{entry.company}</span>
-          {" · "}
-          {entry.location}
-          {" · "}
-          {entry.period}
-          {" · "}
-          <span className="text-foreground">{entry.duration}</span>
-        </p>
-      </button>
-      <div
-        className={`exp-panel grid transition-[grid-template-rows] duration-[260ms] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none ${
-          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+      <Panel
+        className={`transition-colors ${
+          open ? "border-accent/50" : "hover:border-accent/40"
         }`}
       >
-        <ul className="overflow-hidden pt-1">
-          {entry.bullets.map((bullet) => (
-            <li
-              key={bullet}
-              className="flex gap-4 py-[7px] text-detail text-muted"
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-label={toggleLabel()}
+          className="press group block w-full cursor-pointer px-4 py-3.5 text-left md:px-5"
+        >
+          {/* Fila de commit: hash + rol + etiqueta HEAD + toggle diff */}
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span
+              aria-hidden
+              className="font-mono text-[11px] text-accent/80 motion-reduce:transition-none"
             >
-              {/* Cada bullet es una «línea agregada» del diff */}
-              <span
-                aria-hidden
-                className="mt-[12px] h-px w-4 shrink-0 bg-added"
-              />
-              <span>{bullet}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+              {entry.hash}
+            </span>
+            <h3 className="text-[19px] font-semibold tracking-[-0.015em] md:text-[22px]">
+              {entry.role}
+            </h3>
+            {entry.head && (
+              <span className="rounded-[3px] border border-accent/40 bg-accent/10 px-1.5 py-px font-mono text-[10px] tracking-tight text-accent">
+                HEAD → main
+              </span>
+            )}
+            {/* Diff: + agrega líneas (verde), − las quita (rojo) */}
+            <span
+              aria-hidden
+              className={`ml-auto select-none font-mono text-[15px] leading-none transition-colors group-hover:text-foreground print:hidden ${
+                open ? "text-removed" : "text-added"
+              }`}
+            >
+              <span className={`diff-glyph inline-block ${open ? "rotate-180" : ""}`}>
+                {open ? "−" : "+"}
+              </span>
+            </span>
+          </div>
+          <p className="mt-1 font-mono text-meta text-muted">
+            <span className="text-foreground">{entry.company}</span>
+            {" · "}
+            {entry.location}
+            {" · "}
+            {entry.period}
+            {" · "}
+            <span className="text-foreground">{entry.duration}</span>
+          </p>
+        </button>
+        {/* Logros: se despliegan dentro del panel con borde superior */}
+        <div
+          className={`exp-panel grid transition-[grid-template-rows] duration-[260ms] [transition-timing-function:var(--ease-out)] motion-reduce:transition-none ${
+            open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <ul className="overflow-hidden border-t border-rule">
+            {entry.bullets.map((bullet) => (
+              <li
+                key={bullet}
+                className="flex gap-4 px-4 py-[9px] text-detail text-muted md:px-5 md:[&:not(:last-child)]:border-b md:[&:not(:last-child)]:border-rule/60"
+              >
+                {/* Cada bullet es una «línea agregada» del diff */}
+                <span aria-hidden className="mt-[12px] h-px w-4 shrink-0 bg-added" />
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Panel>
     </li>
   );
 }
@@ -99,13 +108,10 @@ export default function ExperienceTimeline() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <Section title={t.sections.experience}>
+    <Section id="experience" title={t.sections.experience}>
       <div className="relative">
-        <span
-          aria-hidden
-          className="absolute left-[7px] top-3 bottom-3 w-px bg-rule"
-        />
-        <ul className="relative flex flex-col gap-10 md:gap-12">
+        <span aria-hidden className="absolute left-[7px] top-3 bottom-3 w-px bg-rule" />
+        <ul className="relative flex flex-col gap-4 md:gap-5">
           {t.experience.map((entry, i) => (
             <Entry
               key={`${entry.company}-${entry.role}`}

@@ -22,6 +22,11 @@
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Superficie de panel: sombra de dos capas, casi imperceptible.
+     En dark la sombra no trabaja; allí manda el borde (craft de tooling). */
+  --panel-shadow:
+    0 1px 2px rgb(14 17 22 / 0.04), 0 4px 14px rgb(14 17 22 / 0.05);
   color-scheme: light;
 }
 
@@ -35,12 +40,18 @@
   --accent-contrast: #0b0f14;
   --added: #3fb950;
   --removed: #f85149;
+  /* En dark el borde define la elevación; la sombra solo da un
+     pelo de luz en el canto superior. */
+  --panel-shadow: inset 0 1px 0 rgb(236 239 243 / 0.04);
   color-scheme: dark;
 }
 
 @theme {
   /* Token de layout: ancho de contenido del CV */
   --container-cv: 1080px;
+
+  /* Radio de panel: el único radio del sistema (tools > docs) */
+  --radius-panel: 6px;
 
   /* Escala tipográfica semántica */
   --text-meta: 0.8125rem; /* 13px — datos de ingeniería en mono */
@@ -64,6 +75,8 @@
   --color-accent-contrast: var(--accent-contrast);
   --color-added: var(--added);
   --color-removed: var(--removed);
+  /* Sombra de panel: var viva para poder anularla en print */
+  --shadow-panel: var(--panel-shadow);
   --font-sans: var(--font-archivo);
   --font-mono: var(--font-jetbrains);
 }
@@ -73,6 +86,15 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   text-rendering: optimizeLegibility;
+  /* Compensa la status bar fija para que no tape el contenido */
+  padding-bottom: 28px;
+}
+
+/* Scroll suave por anclas solo cuando el usuario no pide menos movimiento */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* ------------------------------------------------------------------
@@ -119,6 +141,28 @@ body {
   animation: rise 0.55s var(--ease-out) both;
 }
 
+/* Blink del cursor del bloque de código del hero */
+@keyframes caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 1.05em;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: caret-blink 1.1s steps(1, end) infinite;
+}
+
 /* Press-feedback: todo elemento presionable responde al tacto */
 .press {
   transition: transform 160ms var(--ease-out);
@@ -159,6 +203,10 @@ body {
     animation: none;
   }
 
+  .caret {
+    animation: none;
+  }
+
   .press,
   .theme-icon,
   .diff-glyph {
@@ -182,6 +230,11 @@ body {
     margin: 14mm;
   }
 
+  /* El PDF no lleva sombras de panel; solo bordes planos */
+  :root {
+    --panel-shadow: none;
+  }
+
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -196,11 +249,13 @@ body {
     --rule: #dde3e9;
     --accent: #2c5fff;
     --accent-contrast: #ffffff;
+    --panel-shadow: none;
     color-scheme: light;
   }
 
   body {
     background: #ffffff;
+    padding-bottom: 0;
   }
 
   .no-print {

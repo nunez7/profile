@@ -7,6 +7,7 @@ import Stack from "./Stack";
 import ExperienceTimeline from "./ExperienceTimeline";
 import Formacion from "./Formacion";
 import Footer from "./Footer";
+import StatusBar from "./StatusBar";
 import { Section } from "./ui/Section";
 
 export default function CVPage() {
@@ -17,7 +18,7 @@ export default function CVPage() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <Section title={t.sections.summary}>
+        <Section id="summary" title={t.sections.summary}>
           <p className="max-w-[58ch] text-body">{t.summary}</p>
         </Section>
         <Stack />
@@ -25,6 +26,7 @@ export default function CVPage() {
         <Formacion />
       </main>
       <Footer />
+      <StatusBar />
     </>
   );
 }

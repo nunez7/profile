@@ -4,13 +4,19 @@ import { Container } from "./Container";
 /** Sección del CV: regla superior, título display y contenido. */
 export function Section({
   title,
+  id,
   children,
 }: {
   title: string;
+  /** Ancla para el scrollspy/breadcrumb; reserva espacio bajo el header */
+  id?: string;
   children: ReactNode;
 }) {
   return (
-    <section className="border-t border-rule py-14 md:py-20">
+    <section
+      id={id}
+      className="scroll-mt-24 border-t border-rule py-14 md:py-20"
+    >
       <Container>
         <h2 className="text-[25px] font-semibold tracking-[-0.02em] md:text-[31px]">
           {title}

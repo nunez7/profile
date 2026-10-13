@@ -2,7 +2,9 @@
 
 import { useLang } from "@/i18n/lang-context";
 import { Container } from "./ui/Container";
+import { Panel } from "./ui/Panel";
 import { TextLink } from "./ui/TextLink";
+import ProfileWindow from "./ProfileWindow";
 
 const LINKEDIN_URL = "https://www.linkedin.com/in/felix-nunezg";
 
@@ -22,61 +24,80 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p
-          className="animate-rise mt-6 text-lead font-medium"
-          style={{ animationDelay: "160ms" }}
-        >
-          {t.hero.role}
-        </p>
-        <p
-          className="animate-rise mt-2 font-mono text-meta text-muted"
-          style={{ animationDelay: "220ms" }}
-        >
-          {t.hero.meta}
-        </p>
-        <p className="mt-2 hidden font-mono text-meta text-muted print:block">
-          {t.contact.email}
-          {" · "}
-          {t.contact.phone}
-          {" · "}
-          {t.contact.linkedin}
-        </p>
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-14">
+          {/* Columna izquierda: identidad, CTAs y KPIs */}
+          <div>
+            <p
+              className="animate-rise text-lead font-medium"
+              style={{ animationDelay: "160ms" }}
+            >
+              {t.hero.role}
+            </p>
+            <p
+              className="animate-rise mt-2 font-mono text-meta text-muted"
+              style={{ animationDelay: "220ms" }}
+            >
+              {t.hero.meta}
+            </p>
+            <p className="mt-2 hidden font-mono text-meta text-muted print:block">
+              {t.contact.email}
+              {" · "}
+              {t.contact.phone}
+              {" · "}
+              {t.contact.linkedin}
+            </p>
 
-        <div
-          className="no-print animate-rise mt-9 flex flex-wrap items-center gap-x-6 gap-y-3"
-          style={{ animationDelay: "300ms" }}
-        >
-          {/* CTA primario: barrido direccional al hover, press al tocar */}
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="press group relative overflow-hidden bg-accent px-5 py-2.5 text-detail font-medium text-accent-contrast"
-          >
-            <span
-              aria-hidden
-              className="absolute inset-0 -translate-x-full bg-foreground transition-transform duration-300 [transition-timing-function:var(--ease-drawer)] group-hover:translate-x-0 motion-reduce:transition-none"
-            />
-            <span className="relative transition-colors duration-200 group-hover:text-background">
-              {t.hero.ctaDownload}
-            </span>
-          </button>
-          <TextLink href={`mailto:${t.contact.email}`}>
-            {t.hero.ctaEmail}
-          </TextLink>
-          <TextLink href={LINKEDIN_URL} external>
-            {t.hero.ctaLinkedin}
-          </TextLink>
-        </div>
+            <div
+              className="no-print animate-rise mt-8 flex flex-wrap items-center gap-x-6 gap-y-3"
+              style={{ animationDelay: "300ms" }}
+            >
+              {/* CTA primario: barrido direccional al hover, press al tocar */}
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="press group relative overflow-hidden bg-accent px-5 py-2.5 text-detail font-medium text-accent-contrast"
+              >
+                <span
+                  aria-hidden
+                  className="absolute inset-0 -translate-x-full bg-foreground transition-transform duration-300 [transition-timing-function:var(--ease-drawer)] group-hover:translate-x-0 motion-reduce:transition-none"
+                />
+                <span className="relative transition-colors duration-200 group-hover:text-background">
+                  {t.hero.ctaDownload}
+                </span>
+              </button>
+              <TextLink href={`mailto:${t.contact.email}`}>
+                {t.hero.ctaEmail}
+              </TextLink>
+              <TextLink href={LINKEDIN_URL} external>
+                {t.hero.ctaLinkedin}
+              </TextLink>
+            </div>
 
-        <div
-          className="animate-rise mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-rule pt-6 font-mono text-meta text-muted"
-          style={{ animationDelay: "380ms" }}
-        >
-          <span>{t.hero.stats.years}</span>
-          <span aria-hidden className="h-3.5 w-px bg-rule" />
-          <span>{t.hero.stats.roles}</span>
-          <span aria-hidden className="h-3.5 w-px bg-rule" />
-          <span>{t.hero.stats.certs}</span>
+            {/* KPIs: paneles de datos, label mono + cifra display */}
+            <dl
+              className="animate-rise mt-9 grid grid-cols-3 gap-3"
+              style={{ animationDelay: "380ms" }}
+            >
+              {t.hero.kpis.map((kpi) => (
+                <Panel key={kpi.label} className="px-4 py-3">
+                  <dt className="subhead">{kpi.label}</dt>
+                  <dd className="mt-1 flex items-baseline gap-1">
+                    <span className="text-[28px] font-semibold leading-none tracking-[-0.02em]">
+                      {kpi.value}
+                    </span>
+                    {kpi.unit && (
+                      <span className="font-mono text-meta text-muted">
+                        {kpi.unit}
+                      </span>
+                    )}
+                  </dd>
+                </Panel>
+              ))}
+            </dl>
+          </div>
+
+          {/* Columna derecha: ventana profile.ts */}
+          <ProfileWindow />
         </div>
       </Container>
     </section>

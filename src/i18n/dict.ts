@@ -15,6 +15,8 @@ export type ExperienceEntry = {
   location: string;
   period: string;
   duration: string;
+  /** Hash corto cosmético del «commit» (estable, estilo git log) */
+  hash: string;
   /** El rol actual es HEAD en el grafo de git */
   head?: boolean;
   bullets: string[];
@@ -26,17 +28,33 @@ export type Dict = {
     themeToLight: string;
     themeToDark: string;
   };
+  nav: {
+    ariaLabel: string;
+    home: string;
+  };
   hero: {
     role: string;
     meta: string;
     ctaEmail: string;
     ctaLinkedin: string;
     ctaDownload: string;
-    stats: {
+    kpis: {
+      label: string;
+      value: string;
+      unit?: string;
+    }[];
+    /** Bloque `profile.ts` del hero: ventana de editor con syntax highlight */
+    code: {
+      prompt: string;
       years: string;
-      roles: string;
-      certs: string;
+      location: string;
+      stack: string[];
+      status: string;
     };
+  };
+  statusBar: {
+    branch: string;
+    available: string;
   };
   sections: {
     summary: string;
@@ -86,17 +104,32 @@ export const dict: Record<Lang, Dict> = {
       themeToLight: "Activar tema claro",
       themeToDark: "Activar tema oscuro",
     },
+    nav: {
+      ariaLabel: "Secciones del CV",
+      home: "inicio.md",
+    },
     hero: {
       role: "Ingeniero IT · Lead Full Stack",
       meta: "Nayarit, MX · +8 años · GCP · Java · Spring Boot · React",
       ctaEmail: "Email",
       ctaLinkedin: "LinkedIn",
       ctaDownload: "Descargar CV",
-      stats: {
-        years: "8+ años de experiencia",
-        roles: "3 roles",
-        certs: "15 certificaciones",
+      kpis: [
+        { label: "experiencia", value: "8+", unit: "años" },
+        { label: "trayectoria", value: "3", unit: "roles" },
+        { label: "certificaciones", value: "15" },
+      ],
+      code: {
+        prompt: "cat profile.ts",
+        years: "+8 años",
+        location: "Nayarit, MX",
+        stack: ["Java", "Spring Boot", "GCP", "Next.js"],
+        status: "disponible",
       },
+    },
+    statusBar: {
+      branch: "main",
+      available: "Disponible para proyectos",
     },
     sections: {
       summary: "Síntesis",
@@ -165,6 +198,7 @@ export const dict: Record<Lang, Dict> = {
         location: "Ciudad de México",
         period: "jun 2025 — hoy",
         duration: "+1 año 4 meses",
+        hash: "8f2c1ad",
         head: true,
         bullets: [
           "Dirijo un equipo de desarrollo Full Stack, brindando asesoría técnica y fomentando el crecimiento profesional de sus integrantes.",
@@ -182,6 +216,7 @@ export const dict: Record<Lang, Dict> = {
         location: "Ciudad de México",
         period: "feb 2023 — jun 2025",
         duration: "+2 años 4 meses",
+        hash: "c47d902",
         bullets: [
           "Desarrollé y optimicé interfaces y flujos de integración empresarial complejos utilizando MuleSoft y Anypoint Studio, conectando sistemas clave para Coppel a nivel empresarial (SQL Server y PostgreSQL).",
           "Implementé soluciones de integración de servicios con Google Cloud Platform (GCP) y Spring Boot, aplicando metodologías ágiles y prácticas DevOps para asegurar entregas continuas y eficientes.",
@@ -196,6 +231,7 @@ export const dict: Record<Lang, Dict> = {
         location: "Nayarit",
         period: "ene 2016 — ene 2023",
         duration: "+7 años",
+        hash: "b91e6f3",
         bullets: [
           "Lideré el desarrollo y la administración de un sistema estudiantil integral (registro de ingreso, calificaciones, asistencias, pagos, horarios, cargas académicas y planeación docente), desarrollado con JSP y Java Servlets, iniciando además su migración a Spring Boot para optimizar rendimiento y escalabilidad.",
           "Administré y respaldé bases de datos SQL Server, PostgreSQL y MySQL, garantizando la integridad y disponibilidad de la información crítica del sistema.",
@@ -255,17 +291,32 @@ export const dict: Record<Lang, Dict> = {
       themeToLight: "Switch to light theme",
       themeToDark: "Switch to dark theme",
     },
+    nav: {
+      ariaLabel: "CV sections",
+      home: "home.md",
+    },
     hero: {
       role: "IT Engineer · Full Stack Lead",
       meta: "Nayarit, MX · 8+ yrs · GCP · Java · Spring Boot · React",
       ctaEmail: "Email",
       ctaLinkedin: "LinkedIn",
       ctaDownload: "Download CV",
-      stats: {
-        years: "8+ yrs of experience",
-        roles: "3 roles",
-        certs: "15 certifications",
+      kpis: [
+        { label: "experience", value: "8+", unit: "yrs" },
+        { label: "trajectory", value: "3", unit: "roles" },
+        { label: "certifications", value: "15" },
+      ],
+      code: {
+        prompt: "cat profile.ts",
+        years: "+8 yrs",
+        location: "Nayarit, MX",
+        stack: ["Java", "Spring Boot", "GCP", "Next.js"],
+        status: "available",
       },
+    },
+    statusBar: {
+      branch: "main",
+      available: "Open to projects",
     },
     sections: {
       summary: "Summary",
@@ -334,6 +385,7 @@ export const dict: Record<Lang, Dict> = {
         location: "Mexico City",
         period: "Jun 2025 — now",
         duration: "+1 yr 4 mo",
+        hash: "8f2c1ad",
         head: true,
         bullets: [
           "I lead a Full Stack development team, providing technical guidance and fostering each member's professional growth.",
@@ -351,6 +403,7 @@ export const dict: Record<Lang, Dict> = {
         location: "Mexico City",
         period: "Feb 2023 — Jun 2025",
         duration: "+2 yr 4 mo",
+        hash: "c47d902",
         bullets: [
           "Built and optimized complex enterprise integration interfaces and flows with MuleSoft and Anypoint Studio, connecting key Coppel systems company-wide (SQL Server and PostgreSQL).",
           "Implemented service integration solutions on Google Cloud Platform (GCP) and Spring Boot, applying agile methodologies and DevOps practices for continuous, efficient delivery.",
@@ -364,6 +417,7 @@ export const dict: Record<Lang, Dict> = {
         location: "Nayarit, Mexico",
         period: "Jan 2016 — Jan 2023",
         duration: "+7 yrs",
+        hash: "b91e6f3",
         bullets: [
           "Led the development and administration of a comprehensive student system (enrollment, grades, attendance, payments, schedules, course loads and lesson planning) built with JSP and Java Servlets, and started its migration to Spring Boot for better performance and scalability.",
           "Administered and backed up SQL Server, PostgreSQL and MySQL databases, guaranteeing the integrity and availability of the system's critical data.",
