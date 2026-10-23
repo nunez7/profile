@@ -162,6 +162,24 @@ body {
   }
 }
 
+/* El header sticky (56px) no debe tapar el foco al navegar por anclas
+   (WCAG 2.2 «Focus Not Obscured»); las secciones suman scroll-mt-16. */
+html {
+  scroll-padding-top: 4.5rem;
+}
+
+/* Datos pendientes del CV ( , [año]): visibles para el dueño,
+   discretos para el lector. Mono + subrayado punteado, sin color de
+   alerta. */
+.pending-text {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9em;
+  color: var(--muted);
+  border-bottom: 1px dashed
+    color-mix(in oklab, var(--muted) 55%, transparent);
+  white-space: nowrap;
+}
+
 /* Scroll suave por anclas solo cuando el usuario no pide menos movimiento */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -306,6 +324,15 @@ body {
 
 .press:active {
   transform: scale(0.97);
+}
+
+/* En puntero grueso los controles del header y los enlaces de texto
+   suben a 44×44px (guía táctil); en escritorio no cambia nada. */
+@media (pointer: coarse) {
+  .tap-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
 
 /* Revelado por scroll: una sola vez, entra desde abajo */

@@ -92,8 +92,8 @@ Display: nombre en hero `clamp(2.6rem, 8.5vw, 4.75rem)` Bold (700), tracking `-0
 ## Layout
 
 - `--container-cv: 1080px` → utility `max-w-cv`, consumido por `ui/Container` (gutter `px-6`/`md:px-10`).
-- Alineación: una sola columna fuerte a la izquierda como base; nada centrado. **Excepción deliberada**: el hero es una grilla asimétrica `1.05fr / 0.95fr` en `lg` (identidad + KPIs a la izquierda, ventana `profile.ts` a la derecha); en móvil el `profile.ts` cae debajo de los CTAs. Síntesis usa una grilla `1fr / 15rem` en `lg`: párrafo `58ch` a la izquierda y un aside con hairline izquierdo (disponibilidad, ubicación, enfoque) a la derecha; en móvil el aside cae debajo con hairline superior. Ambos hijos de la grilla del hero llevan `min-w-0`: el ancho lo pone la grilla, nunca el contenido monospace.
-- Secciones separadas por `border-t border-rule`; más espacio encima del título que debajo (`py-14/20` + `mt-8/10`). Cada sección ancla con `id` + `scroll-mt-24` para el scrollspy.
+- Alineación: una sola columna fuerte a la izquierda como base; nada centrado. **Excepción deliberada**: el hero es una grilla asimétrica `1.05fr / 0.95fr` en `lg` (identidad + KPIs a la izquierda, ventana `profile.ts` a la derecha); en móvil el `profile.ts` cae debajo de los CTAs. Síntesis usa una grilla `1fr / 15rem` en `lg`: bloque de frases cortas `58ch` a la izquierda y un aside con hairline izquierdo (disponibilidad, ubicación, enfoque) a la derecha; en móvil el aside cae debajo con hairline superior. Debajo, tres highlights (Liderazgo / Arquitectura / Integración) en columnas con un `+` verde. Ambos hijos de la grilla del hero llevan `min-w-0`: el ancho lo pone la grilla, nunca el contenido monospace.
+- Secciones separadas por `border-t border-rule`; más espacio encima del título que debajo (`py-14/20` + `mt-8/10`). Cada sección ancla con `id`; el offset del header sticky lo da un único `html { scroll-padding-top: 4.5rem }` (no se suma un `scroll-mt` por sección, que duplicaría el hueco).
 
 ## Componentes (`src/components/ui/`)
 
@@ -114,15 +114,16 @@ Componentes de página: `Header` (lang + theme toggle + `Breadcrumb`), `Hero` (+
 
 Dos dispositivos envuelven la página como un editor, ambos `no-print`:
 
-- **`Breadcrumb`** (dentro del header sticky): ruta `~/cv/<sección>.md` que sigue el scroll vía `useScrollSpy`, con `aria-current="location"`; a la derecha, atajos a secciones en mono (ocultos en mobile). El archivo usa el label localizado de la sección.
+- **`Breadcrumb`** (dentro del header sticky): ruta `~/cv/<sección>.md` que sigue el scroll vía `useScrollSpy`; a la derecha, atajos a secciones en mono (ocultos en mobile) con `aria-current="location"` solo en el activo y `aria-label` con el nombre de la sección (el texto visible es el archivo). El archivo de la ruta usa el label localizado.
 - **`StatusBar`** (fija abajo): rama `main`, `UTF-8`, `LF`, `TSX`, idioma y un punto verde de disponibilidad. Altura 28px reservada en `body` para no tapar contenido.
 
 ### Dispositivos de contenido
 
 - **`ProfileWindow`**: ventana de editor (semáforo + pestaña `profile.ts`) con `$ cat profile.ts` y una `interface Profile` con syntax highlighting. Alineación de propiedades por padding mono; caret que parpadea al final del `status`.
-- **Timeline tipo `git log`**: cada entrada es un panel con hash corto (cosmético, determinístico) en accent, badge `HEAD → main` en el rol actual, y el toggle `+`/`−` de diff. Los logros se despliegan dentro del panel con borde superior. La primera entrada nace abierta en desktop; en móvil (<768px) todas nacen plegadas — el escaneo ve los tres puestos sin hacer scroll.
+- **Timeline tipo `git log`**: cada entrada es un panel con hash corto (cosmético, determinístico) en accent, badge `HEAD → main` en el rol actual, y el toggle `+`/`−` de diff. Bajo la cabecera, una fila de chips con las tecnologías del rol (punto en su color de marca) queda **siempre visible**, incluso con la entrada plegada y fuera del `<button>` para no ocultarla a lectores de pantalla. Dentro del panel, 3–4 logros orientados a impacto, sin cifras inventadas; cualquier dato pendiente se marca entre corchetes (p. ej. el rango de la ACE) y se resalta en mono con subrayado punteado. La primera entrada nace abierta en desktop; en móvil (<768px) todas nacen plegadas — el escaneo ve los tres puestos y su stack sin hacer scroll.
 - **Stack tipo manifiesto**: cada grupo es un panel con filas alineadas — punto de color de marca, nombre (lead si es `primary`, muted si no) y hue de categoría como regla superior.
-- **KPIs del hero**: label mono (`subhead`), cifra display 28px en color de su métrica y unidad mono muted. En `sm+`, tres paneles `flat` con borde superior en ese color; en `<sm`, filas hairline (label a la izquierda, cifra a la derecha, separadas por `border-rule`) — tres paneles apilados costaban ~280px y empujaban `profile.ts` a la tercera pantalla.
+- **KPIs del hero**: label mono (`subhead`), cifra display 28px en color de su métrica y unidad mono muted. En `sm+`, tres paneles `flat` con borde superior en ese color; en `<sm`, filas hairline (label a la izquierda, cifra a la derecha, separadas por `border-rule`) — tres paneles apilados costaban ~280px y empujaban `profile.ts` a la tercera pantalla. Las cifras se derivan del contenido: años desde ene 2016, número de roles y de certificaciones (`getHeroKpis`), no literales en el copy.
+- **Formación y certificaciones**: la ACE abre la sección como tarjeta `flat` con ícono de GCP, emisor y año o rango (`[2026-2029]`, entre corchetes si falta confirmarlo). El resto se agrupa en cinco dominios con la regla superior de su hue — Cloud & DevOps, Integración & APIs, Backend & Arquitectura, Frontend y Liderazgo — en listas hairline (una columna en móvil, dos en `sm+`).
 
 ## Movimiento
 
@@ -151,4 +152,6 @@ Selección de texto (`accent` 24%), caret heredado, scrollbar (`rule`, thin), fo
 
 ## Accesibilidad
 
-Contraste AA en ambos temas, verificado por `npm run check:contrast` (pares de texto ≥4.5:1, estados ≥3:1); `aria-pressed` (idioma), `aria-expanded` + `aria-label` (toggle de logros), `aria-label` (tema), `role="group"` (selector de idioma), `aria-label` en el `nav` del breadcrumb con `aria-current="location"` en la ruta y en la sección activa; la status bar es `aria-hidden` (ambiente, no información). Landmarks `main`/`header`/`footer`/`nav`, skip-to-content como primera parada de teclado (ancla `#main-content`), JSON-LD `Person` en `page.tsx`.
+Contraste AA en ambos temas, verificado por `npm run check:contrast` (pares de texto ≥4.5:1, estados ≥3:1); `aria-pressed` (idioma), `aria-expanded` + `aria-label` (toggle de logros), `aria-label` (tema), `role="group"` (selector de idioma), `aria-label` en el `nav` del breadcrumb y `aria-current="location"` **solo en el enlace de la sección activa**, con el nombre de la sección como nombre accesible; la lista de chips de cada rol lleva `aria-label` y la status bar es `aria-hidden` (ambiente, no información). Landmarks `main`/`header`/`footer`/`nav`, skip-to-content como primera parada de teclado (ancla `#main-content`), JSON-LD `Person` en `page.tsx`.
+
+Foco visible con `outline` accent de 2px en todos los interactivos; `html { scroll-padding-top: 4.5rem }` evita que el header sticky tape el destino de un ancla o el foco al desplazarse. En `(pointer: coarse)` los controles del header y los enlaces de texto suben a **44×44px** (`.tap-target`), sin cambiar el layout de escritorio. Los tokens entre corchetes son texto real —no `aria-hidden`— para que el dato pendiente también se anuncie. `prefers-reduced-motion` apaga el caret, los transforms, el pulso y el scroll suave, y conserva solo fades de opacidad.

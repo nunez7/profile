@@ -1,6 +1,7 @@
 "use client";
 
 import { useLang } from "@/i18n/lang-context";
+import { withYears } from "@/data/resume";
 import { Panel } from "./ui/Panel";
 
 /**
@@ -10,9 +11,10 @@ import { Panel } from "./ui/Panel";
  * Todo el copy viene del dict; los nombres de propiedad son tokens
  * de código (role/years/…) idénticos en ambos idiomas.
  */
-export default function ProfileWindow() {
+export default function ProfileWindow({ years }: { years: number }) {
   const { t } = useLang();
   const c = t.hero.code;
+  const yearsLabel = withYears(c.years, years);
 
   return (
     <div className="animate-rise" style={{ animationDelay: "300ms" }}>
@@ -47,7 +49,7 @@ export default function ProfileWindow() {
           </p>
           <p className="whitespace-pre pl-4 font-mono text-[12px] leading-[1.75] md:text-[12.5px]">
             <span className="text-foreground">{"years:   "}</span>
-            <span className="text-added">{`"${c.years}"`}</span>
+            <span className="text-added">{`"${yearsLabel}"`}</span>
           </p>
           <p className="whitespace-pre pl-4 font-mono text-[12px] leading-[1.75] md:text-[12.5px]">
             <span className="text-foreground">{"location:"}</span>

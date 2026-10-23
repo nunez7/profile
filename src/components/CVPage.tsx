@@ -1,6 +1,7 @@
 "use client";
 
 import { useLang } from "@/i18n/lang-context";
+import { withYears } from "@/data/resume";
 import Header from "./Header";
 import Hero from "./Hero";
 import Stack from "./Stack";
@@ -10,7 +11,7 @@ import Footer from "./Footer";
 import StatusBar from "./StatusBar";
 import { Section } from "./ui/Section";
 
-export default function CVPage() {
+export default function CVPage({ years }: { years: number }) {
   const { t } = useLang();
 
   return (
@@ -24,10 +25,15 @@ export default function CVPage() {
       </a>
       <Header />
       <main id="main-content" tabIndex={-1} className="flex-1">
-        <Hero />
+        <Hero years={years} />
         <Section id="summary" title={t.sections.summary} tone="band">
           <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_15rem] lg:items-start lg:gap-12">
-            <p className="max-w-[58ch] text-body">{t.summary}</p>
+            {/* Frases cortas: una por línea, misma medida de lectura */}
+            <div className="max-w-[58ch] space-y-2 text-body">
+              {t.summary.map((sentence) => (
+                <p key={sentence}>{withYears(sentence, years)}</p>
+              ))}
+            </div>
             {/* Aside editorial: estado, ubicación y enfoque — cierra el
                 hueco derecho de la sección y da a lectores de pantalla
                 la disponibilidad que la status bar (aria-hidden) calla */}
@@ -49,6 +55,24 @@ export default function CVPage() {
               </div>
             </aside>
           </div>
+          {/* Tres señales para el escaneo de 10 segundos: el «+» es una
+              línea agregada del mundo git, no un bullet genérico */}
+          <ul className="mt-8 grid gap-x-8 gap-y-4 border-t border-rule pt-6 sm:grid-cols-3">
+            {t.summaryHighlights.map((highlight) => (
+              <li key={highlight.label}>
+                <p className="flex items-baseline gap-2">
+                  <span
+                    aria-hidden
+                    className="font-mono text-[13px] leading-none text-added"
+                  >
+                    +
+                  </span>
+                  <span className="subhead">{highlight.label}</span>
+                </p>
+                <p className="mt-1 text-detail text-muted">{highlight.text}</p>
+              </li>
+            ))}
+          </ul>
         </Section>
         <Stack />
         <ExperienceTimeline />

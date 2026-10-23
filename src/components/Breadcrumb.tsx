@@ -24,20 +24,7 @@ export default function Breadcrumb() {
   const ids = useMemo(() => ["top", ...SECTION_IDS], []);
   const activeId = useScrollSpy(ids);
 
-  const fileFor = (id: SectionId) => {
-    switch (id) {
-      case "summary":
-        return `${t.sections.summary.toLowerCase()}.md`;
-      case "stack":
-        return `${t.sections.stack.toLowerCase()}.md`;
-      case "experience":
-        return `${t.sections.experience.toLowerCase()}.md`;
-      case "education":
-        return `${t.sections.education.toLowerCase()}.md`;
-      case "contact":
-        return `${t.sections.contact.toLowerCase()}.md`;
-    }
-  };
+  const fileFor = (id: SectionId) => `${t.sections[id].toLowerCase()}.md`;
 
   const activeFile =
     activeId === "top" ? t.nav.home : fileFor(activeId as SectionId);
@@ -52,7 +39,6 @@ export default function Breadcrumb() {
           </span>
           <span
             className="min-w-0 truncate text-accent"
-            aria-current="location"
           >
             {activeFile}
           </span>
@@ -68,7 +54,10 @@ export default function Breadcrumb() {
                 <a
                   href={`#${id}`}
                   aria-current={active ? "location" : undefined}
-                  className={`press flex min-h-6 items-center gap-1 font-mono text-[12px] transition-colors ${
+                  /* El nombre visible es el archivo; para AT el enlace
+                     se anuncia con el nombre de la sección. */
+                  aria-label={t.sections[id]}
+                  className={`press tap-target flex min-h-6 items-center gap-1 font-mono text-[12px] transition-colors ${
                     active
                       ? "text-foreground"
                       : "text-muted hover:text-foreground"

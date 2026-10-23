@@ -79,7 +79,7 @@ Comando: polish
 
 ## Observaciones menores
 
-- meta repite +8 años a 120px del KPI — redundancia inofensiva.
+- meta repite +10 años a 120px del KPI — redundancia inofensiva.
 - Hueco bajo Frontend (5) junto a Prácticas (7) — whitespace intencional con items-start.
 - "(PDF)" en la label del CTA alinearía expectativa con el diálogo.
 - Sombra shadow-panel en claro al umbral de visibilidad sobre papel lavanda.

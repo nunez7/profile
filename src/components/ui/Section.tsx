@@ -9,7 +9,8 @@ export function Section({
   children,
 }: {
   title: string;
-  /** Ancla para el scrollspy/breadcrumb; reserva espacio bajo el header */
+  /** Ancla para el scrollspy/breadcrumb (el offset lo da
+   * `scroll-padding-top` global, no un `scroll-mt` por sección) */
   id?: string;
   /** `band` alterna la superficie para marcar el inicio de la sección. */
   tone?: "default" | "band";
@@ -18,7 +19,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={`scroll-mt-16 border-t border-rule py-14 md:py-20 ${
+      className={`border-t border-rule py-14 md:py-20 ${
         tone === "band" ? "bg-section-band" : ""
       }`}
     >

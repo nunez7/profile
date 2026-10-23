@@ -3,6 +3,8 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 import { dict } from "@/i18n/dict";
+import { getHeroKpis, withYears } from "@/data/resume";
+import { getYearsOfExperience } from "@/data/years";
 
 /* Tarjeta social del CV. Replica el hero (chrome de terminal, nombre
    apilado, subrayado de marca, rol, meta y KPIs) sobre el tema oscuro.
@@ -39,7 +41,13 @@ const KPI_HUES = [BRAND, "#fb923c", "#34d399"];
 
 const t = dict.es.hero;
 
-export default function Image() {
+export default async function Image() {
+  /* La imagen se genera dentro del contexto de la ruta: calcular aquí
+     (y no en module scope) permite usar el scope `use cache`. */
+  const years = await getYearsOfExperience();
+  const meta = withYears(t.meta, years);
+  const kpis = getHeroKpis(dict.es, years);
+
   return new ImageResponse(
     (
       <div
@@ -122,12 +130,12 @@ export default function Image() {
             color: MUTED,
           }}
         >
-          {t.meta}
+          {meta}
         </div>
 
         {/* KPIs: mismas métricas y colores que el hero */}
         <div style={{ display: "flex", marginTop: 44, gap: 60 }}>
-          {t.kpis.map((kpi, i) => (
+          {kpis.map((kpi, i) => (
             <div key={kpi.label} style={{ display: "flex", flexDirection: "column" }}>
               <div
                 style={{

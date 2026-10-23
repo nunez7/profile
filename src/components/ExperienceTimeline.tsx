@@ -2,9 +2,10 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { useLang } from "@/i18n/lang-context";
-import { COMPANY_COLORS } from "@/data/tech-colors";
+import { COMPANY_COLORS, TECH_COLORS } from "@/data/tech-colors";
 import { Section } from "./ui/Section";
 import { Panel } from "./ui/Panel";
+import { PendingText } from "./ui/PendingText";
 import { useReveal } from "./ui/use-reveal";
 import type { ExperienceEntry } from "@/i18n/dict";
 
@@ -13,12 +14,14 @@ function Entry({
   open,
   onToggle,
   toggleLabel,
+  techLabel,
   index,
 }: {
   entry: ExperienceEntry;
   open: boolean;
   onToggle: () => void;
   toggleLabel: () => string;
+  techLabel: string;
   index: number;
 }) {
   const { ref, visible } = useReveal<HTMLLIElement>("-60px");
@@ -108,6 +111,28 @@ function Entry({
             <span className="text-foreground">{entry.duration}</span>
           </p>
         </button>
+        {/* Chips de tecnologías: fuera del <button> para que el
+            aria-label del toggle no los oculte a lectores de pantalla.
+            Visibles también con la entrada plegada — el reclutador ve
+            el stack sin abrir el acordeón. */}
+        <ul
+          aria-label={techLabel}
+          className="flex flex-wrap gap-1.5 px-4 pb-3 md:px-5"
+        >
+          {entry.tech.map((tech) => (
+            <li
+              key={tech}
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-[3px] border border-rule bg-background/60 px-2 py-0.5 font-mono text-[11px] text-muted"
+            >
+              <span
+                aria-hidden
+                className="size-[6px] shrink-0 rounded-full"
+                style={{ backgroundColor: TECH_COLORS[tech] ?? companyColor }}
+              />
+              {tech}
+            </li>
+          ))}
+        </ul>
         {/* Logros: se despliegan dentro del panel con borde superior.
             Entrada y salida asimétricas (260/200ms): abrir tarda en
             mostrar contenido, cerrar debe despejar la vista ya. */}
@@ -131,7 +156,9 @@ function Entry({
               >
                 {/* Cada bullet es una «línea agregada» del diff */}
                 <span aria-hidden className="mt-[12px] h-px w-4 shrink-0 bg-added" />
-                <span>{bullet}</span>
+                <span>
+                  <PendingText text={bullet} />
+                </span>
               </li>
             ))}
           </ul>
@@ -187,6 +214,7 @@ export default function ExperienceTimeline() {
               entry={entry}
               index={i}
               open={openIdx === i}
+              techLabel={t.experienceTechLabel}
               onToggle={() => setUserChoice(openIdx === i ? null : i)}
               toggleLabel={() =>
                 `${openIdx === i ? t.experienceToggle.hide : t.experienceToggle.show} ${entry.role}`

@@ -94,7 +94,7 @@ export default function Header() {
                   type="button"
                   onClick={() => setLang(l)}
                   aria-pressed={lang === l}
-                  className={`press flex min-h-8 min-w-8 items-center justify-center px-1.5 font-mono text-[12px] transition-colors ${
+                  className={`press tap-target flex min-h-8 min-w-8 items-center justify-center px-1.5 font-mono text-[12px] transition-colors ${
                     lang === l
                       ? "text-foreground underline decoration-accent decoration-2 underline-offset-4"
                       : "text-muted hover:text-foreground"
@@ -111,7 +111,7 @@ export default function Header() {
             aria-label={
               theme === "light" ? t.header.themeToDark : t.header.themeToLight
             }
-            className="press flex size-9 items-center justify-center rounded-panel border border-rule text-muted transition-colors hover:border-accent hover:text-accent"
+            className="press tap-target flex size-9 items-center justify-center rounded-panel border border-rule text-muted transition-colors hover:border-accent hover:text-accent"
           >
             <ThemeIcon theme={theme} />
           </button>

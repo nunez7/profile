@@ -19,7 +19,40 @@ export type ExperienceEntry = {
   hash: string;
   /** El rol actual es HEAD en el grafo de git */
   head?: boolean;
+  /** Tecnologías del rol; nombres idénticos en ES/EN (como el Stack) */
+  tech: string[];
   bullets: string[];
+};
+
+export type Certification = {
+  name: string;
+  /** Solo cuando el dato existe; nunca se inventa una fecha */
+  year?: string;
+};
+
+export type CertificationGroup = {
+  id: string;
+  label: string;
+  items: Certification[];
+};
+
+export type Certifications = {
+  featured: {
+    /** «Certificación principal» / «Featured certification» */
+    label: string;
+    name: string;
+    issuer: string;
+    /** Año o rango; entre corchetes si está pendiente de confirmar */
+    year: string;
+    /** Key de TECH_ICONS para el ícono del emisor */
+    icon: string;
+  };
+  groups: CertificationGroup[];
+};
+
+export type SummaryHighlight = {
+  label: string;
+  text: string;
 };
 
 export type Dict = {
@@ -66,13 +99,16 @@ export type Dict = {
     languages: string;
     contact: string;
   };
-  summary: string;
+  summary: string[];
+  summaryHighlights: SummaryHighlight[];
   summaryAside: {
     location: string;
     focus: string;
   };
   stack: StackGroup[];
   experience: ExperienceEntry[];
+  /** aria-label de la lista de chips de tecnologías por rol */
+  experienceTechLabel: string;
   experienceToggle: {
     show: string;
     hide: string;
@@ -82,7 +118,7 @@ export type Dict = {
     school: string;
     degree: string;
   };
-  certifications: string[];
+  certifications: Certifications;
   languages: {
     name: string;
     level: string;
@@ -116,18 +152,18 @@ export const dict: Record<Lang, Dict> = {
     },
     hero: {
       role: "Ingeniero IT · Lead Full Stack",
-      meta: "Nayarit, MX · +8 años · GCP · Java · Spring Boot · React",
+      meta: "Nayarit, MX · +{years} años · GCP · Java · Spring Boot · React",
       ctaEmail: "Email",
       ctaLinkedin: "LinkedIn",
       ctaDownload: "Descargar CV",
       kpis: [
-        { label: "experiencia", value: "8+", unit: "años" },
+        { label: "experiencia", value: "{years}+", unit: "años" },
         { label: "trayectoria", value: "3", unit: "roles" },
         { label: "certificaciones", value: "15" },
       ],
       code: {
         prompt: "cat profile.ts",
-        years: "+8 años",
+        years: "+{years} años",
         location: "Nayarit, MX",
         stack: ["Java", "Spring Boot", "GCP", "Next.js"],
         status: "disponible",
@@ -146,8 +182,26 @@ export const dict: Record<Lang, Dict> = {
       languages: "Idiomas",
       contact: "Contacto",
     },
-    summary:
-      "Ingeniero IT & Lead Full Stack con +8 años de experiencia diseñando e integrando soluciones empresariales en la nube. Actualmente lidero equipos en VASS LATAM, combinando la gestión técnica con decisiones de arquitectura, revisión de código y diseño de sistemas. Especializado en Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) y frontend moderno (Next.js, React, TypeScript). Enfocado en entregar arquitecturas escalables, seguras y de alto rendimiento, optimizando el ciclo de desarrollo mediante la integración de IA.",
+    summary: [
+      "Ingeniero IT y Lead Full Stack con +{years} años construyendo e integrando soluciones empresariales en la nube.",
+      "Lidero equipos en VASS LATAM y combino la gestión técnica con arquitectura, revisión de código y diseño de sistemas.",
+      "Especialista en Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) y frontend moderno (Next.js, React, TypeScript).",
+      "Integro IA en el ciclo de desarrollo para entregar antes, sin sacrificar la revisión humana.",
+    ],
+    summaryHighlights: [
+      {
+        label: "Liderazgo",
+        text: "Equipos Full Stack con mentoría, revisión de código y estándares de entrega.",
+      },
+      {
+        label: "Arquitectura",
+        text: "Sistemas cloud en GCP con Java, Spring Boot y APIs seguras.",
+      },
+      {
+        label: "Integración",
+        text: "Ecosistemas empresariales conectados con MuleSoft y Apigee.",
+      },
+    ],
     summaryAside: {
       location: "Ubicación",
       focus: "Enfoque",
@@ -210,14 +264,12 @@ export const dict: Record<Lang, Dict> = {
         duration: "+1 año 4 meses",
         hash: "8f2c1ad",
         head: true,
+        tech: ["Java", "Spring Boot", "GCP", "React", "Next.js", "TypeScript"],
         bullets: [
-          "Dirijo un equipo de desarrollo Full Stack, brindando asesoría técnica y fomentando el crecimiento profesional de sus integrantes.",
-          "Colaboro con arquitectos de equipo en la revisión de documentación y la toma de decisiones estratégicas para implementar mejoras escalables en los sistemas.",
-          "Elaboro y reviso documentación técnica detallada para la implementación de soluciones, asegurando la correcta ejecución y estandarización de los proyectos.",
-          "Realizo revisiones de código previas al despliegue en ambientes de producción, minimizando riesgos y garantizando la calidad del software.",
-          "Genero diagramas técnicos claros y concisos que facilitan la comprensión y el mantenimiento de los sistemas.",
-          "Superviso y oriento el desarrollo de componentes Full Stack, asegurando coherencia y calidad en la entrega, apoyándome en herramientas de IA para acelerar el ciclo de desarrollo.",
-          "Programación y seguimiento de actividades de operadores para garantizar eficiencia y cumplimiento de objetivos de los equipos.",
+          "Lidero un equipo de desarrolladores Full Stack: mentoría, planificación y seguimiento operativo que mejoran la previsibilidad de entrega.",
+          "Trabajo con los arquitectos en decisiones y documentación de arquitectura; los diagramas y especificaciones que produzco reducen el retrabajo entre diseño e implementación.",
+          "Responsable de la revisión de código previa a producción y del estándar documental de los proyectos, reduciendo los incidentes originados en cambios.",
+          "Integro herramientas de IA en el desarrollo Full Stack y acorto el ciclo de implementación sin relajar la revisión humana.",
         ],
       },
       {
@@ -227,6 +279,15 @@ export const dict: Record<Lang, Dict> = {
         period: "feb 2023 — jun 2025",
         duration: "+2 años 4 meses",
         hash: "c47d902",
+        tech: [
+          "MuleSoft",
+          "Anypoint Studio",
+          "Spring Boot",
+          "GCP",
+          "Node.js",
+          "SQL Server",
+          "PostgreSQL",
+        ],
         bullets: [
           "Desarrollé y optimicé interfaces y flujos de integración empresarial complejos utilizando MuleSoft y Anypoint Studio, conectando sistemas clave para Coppel a nivel empresarial (SQL Server y PostgreSQL).",
           "Implementé soluciones de integración de servicios con Google Cloud Platform (GCP) y Spring Boot, aplicando metodologías ágiles y prácticas DevOps para asegurar entregas continuas y eficientes.",
@@ -242,6 +303,15 @@ export const dict: Record<Lang, Dict> = {
         period: "ene 2016 — ene 2023",
         duration: "+7 años",
         hash: "b91e6f3",
+        tech: [
+          "JSP",
+          "Java Servlets",
+          "Spring Boot",
+          "Thymeleaf",
+          "SQL Server",
+          "PostgreSQL",
+          "MySQL",
+        ],
         bullets: [
           "Lideré el desarrollo y la administración de un sistema estudiantil integral (registro de ingreso, calificaciones, asistencias, pagos, horarios, cargas académicas y planeación docente), desarrollado con JSP y Java Servlets, iniciando además su migración a Spring Boot para optimizar rendimiento y escalabilidad.",
           "Administré y respaldé bases de datos SQL Server, PostgreSQL y MySQL, garantizando la integridad y disponibilidad de la información crítica del sistema.",
@@ -255,28 +325,67 @@ export const dict: Record<Lang, Dict> = {
       show: "Ver logros de",
       hide: "Ocultar logros de",
     },
+    experienceTechLabel: "Tecnologías del rol",
     education: {
       date: "2015",
       school: "Universidad Tecnológica de La Costa",
       degree: "Ingeniería en Tecnologías de la Información y Comunicación",
     },
-    certifications: [
-      "Google Cloud Associate Cloud Engineer (ACE)",
-      "Build Infrastructure with Terraform on Google Cloud — Skill Badge",
-      "Implement Cloud Security Fundamentals on Google Cloud — Skill Badge",
-      "Alternativas modernas para la Arquitectura de Software",
-      "Liderazgo: Gerencia en Tecnología",
-      "Azure DevOps",
-      "API Development with Apigee",
-      "Microservicios con Spring Cloud",
-      "Principios SOLID y Clean Code",
-      "Next.js: el framework de React",
-      "MuleSoft 4 Fundamentals",
-      "Tuning del servidor PostgreSQL",
-      "Microservicios con Spring",
-      "API REST y Docker",
-      "Certificación Profesional en Java 6 — Oracle",
-    ],
+    certifications: {
+      featured: {
+        label: "Certificación principal",
+        name: "Google Cloud Associate Cloud Engineer (ACE)",
+        issuer: "Google Cloud",
+        year: "[2026-2029]",
+        icon: "Google Cloud Platform (GCP)",
+      },
+      groups: [
+        {
+          id: "cloud",
+          label: "Cloud & DevOps",
+          items: [
+            {
+              name: "Build Infrastructure with Terraform on Google Cloud — Skill Badge",
+            },
+            {
+              name: "Implement Cloud Security Fundamentals on Google Cloud — Skill Badge",
+            },
+            { name: "Azure DevOps" },
+          ],
+        },
+        {
+          id: "integration",
+          label: "Integración & APIs",
+          items: [
+            { name: "API Development with Apigee" },
+            { name: "MuleSoft 4 Fundamentals" },
+            { name: "API REST y Docker" },
+          ],
+        },
+        {
+          id: "backend",
+          label: "Backend & Arquitectura",
+          items: [
+            { name: "Microservicios con Spring Cloud" },
+            { name: "Microservicios con Spring" },
+            { name: "Tuning del servidor PostgreSQL" },
+            { name: "Principios SOLID y Clean Code" },
+            { name: "Alternativas modernas para la Arquitectura de Software" },
+            { name: "Certificación Profesional en Java 6 — Oracle" },
+          ],
+        },
+        {
+          id: "frontend",
+          label: "Frontend",
+          items: [{ name: "Next.js: el framework de React" }],
+        },
+        {
+          id: "leadership",
+          label: "Liderazgo",
+          items: [{ name: "Liderazgo: Gerencia en Tecnología" }],
+        },
+      ],
+    },
     languages: [
       { name: "Español", level: "Nativo" },
       { name: "Inglés", level: "Intermedio" },
@@ -307,19 +416,19 @@ export const dict: Record<Lang, Dict> = {
       skip: "Skip to content",
     },
     hero: {
-      role: "IT Engineer · Full Stack Lead",
-      meta: "Nayarit, MX · 8+ yrs · GCP · Java · Spring Boot · React",
+      role: "IT Engineer · Full Stack Developer",
+      meta: "Nayarit, MX · +{years} yrs · GCP · Java · Spring Boot · React",
       ctaEmail: "Email",
       ctaLinkedin: "LinkedIn",
       ctaDownload: "Download CV",
       kpis: [
-        { label: "experience", value: "8+", unit: "yrs" },
+        { label: "experience", value: "{years}+", unit: "yrs" },
         { label: "trajectory", value: "3", unit: "roles" },
         { label: "certifications", value: "15" },
       ],
       code: {
         prompt: "cat profile.ts",
-        years: "+8 yrs",
+        years: "+{years} yrs",
         location: "Nayarit, MX",
         stack: ["Java", "Spring Boot", "GCP", "Next.js"],
         status: "available",
@@ -338,8 +447,26 @@ export const dict: Record<Lang, Dict> = {
       languages: "Languages",
       contact: "Contact",
     },
-    summary:
-      "IT Engineer & Full Stack Lead with 8+ years of experience designing and integrating enterprise solutions in the cloud. Currently leading teams at VASS LATAM, combining hands-on technical management with architecture decisions, code review and system design. Specialized in Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) and modern frontend (Next.js, React, TypeScript). Focused on delivering scalable, secure, high-performance architectures while speeding up the development cycle with AI.",
+    summary: [
+      "IT Engineer & Full Stack Developer with +{years} years building and integrating enterprise cloud solutions.",
+      "I lead teams at VASS LATAM, combining technical management with architecture, code review and system design.",
+      "Specialized in Java (Spring Boot), GCP, APIs (Apigee, MuleSoft) and modern frontend (Next.js, React, TypeScript).",
+      "I embed AI into the development cycle to ship faster without sacrificing human review.",
+    ],
+    summaryHighlights: [
+      {
+        label: "Leadership",
+        text: "Full Stack teams with mentoring, code review and delivery standards.",
+      },
+      {
+        label: "Architecture",
+        text: "Cloud systems on GCP with Java, Spring Boot and secure APIs.",
+      },
+      {
+        label: "Integration",
+        text: "Enterprise ecosystems connected with MuleSoft and Apigee.",
+      },
+    ],
     summaryAside: {
       location: "Location",
       focus: "Focus",
@@ -402,14 +529,12 @@ export const dict: Record<Lang, Dict> = {
         duration: "+1 yr 4 mo",
         hash: "8f2c1ad",
         head: true,
+        tech: ["Java", "Spring Boot", "GCP", "React", "Next.js", "TypeScript"],
         bullets: [
-          "I lead a Full Stack development team, providing technical guidance and fostering each member's professional growth.",
-          "I work with solution architects reviewing documentation and making strategic decisions to ship scalable system improvements.",
-          "I write and review detailed technical documentation for solution implementation, ensuring correct execution and project standardization.",
-          "I run pre-deployment code reviews for production environments, minimizing risk and guaranteeing software quality.",
-          "I produce clear, concise technical diagrams that make systems easier to understand and maintain.",
-          "I supervise and guide Full Stack component development, keeping deliveries coherent and high quality, using AI tools to speed up the development cycle.",
-          "I plan and track operator activities to keep teams efficient and on target.",
+          "Lead a team of Full Stack developers, with mentoring, planning and operational tracking that improve delivery predictability.",
+          "Partner with architects on architecture decisions and documentation; the diagrams and specifications I produce cut design-to-implementation rework.",
+          "Own pre-production code review and the project documentation standard, reducing change-induced incidents.",
+          "Embed AI tooling in Full Stack delivery, shortening the implementation cycle without relaxing human review.",
         ],
       },
       {
@@ -419,6 +544,15 @@ export const dict: Record<Lang, Dict> = {
         period: "Feb 2023 — Jun 2025",
         duration: "+2 yr 4 mo",
         hash: "c47d902",
+        tech: [
+          "MuleSoft",
+          "Anypoint Studio",
+          "Spring Boot",
+          "GCP",
+          "Node.js",
+          "SQL Server",
+          "PostgreSQL",
+        ],
         bullets: [
           "Built and optimized complex enterprise integration interfaces and flows with MuleSoft and Anypoint Studio, connecting key Coppel systems company-wide (SQL Server and PostgreSQL).",
           "Implemented service integration solutions on Google Cloud Platform (GCP) and Spring Boot, applying agile methodologies and DevOps practices for continuous, efficient delivery.",
@@ -433,6 +567,15 @@ export const dict: Record<Lang, Dict> = {
         period: "Jan 2016 — Jan 2023",
         duration: "+7 yrs",
         hash: "b91e6f3",
+        tech: [
+          "JSP",
+          "Java Servlets",
+          "Spring Boot",
+          "Thymeleaf",
+          "SQL Server",
+          "PostgreSQL",
+          "MySQL",
+        ],
         bullets: [
           "Led the development and administration of a comprehensive student system (enrollment, grades, attendance, payments, schedules, course loads and lesson planning) built with JSP and Java Servlets, and started its migration to Spring Boot for better performance and scalability.",
           "Administered and backed up SQL Server, PostgreSQL and MySQL databases, guaranteeing the integrity and availability of the system's critical data.",
@@ -446,28 +589,67 @@ export const dict: Record<Lang, Dict> = {
       show: "Show achievements for",
       hide: "Hide achievements for",
     },
+    experienceTechLabel: "Role technologies",
     education: {
       date: "2015",
       school: "Universidad Tecnológica de La Costa",
       degree: "B.Eng. in Information and Communication Technologies",
     },
-    certifications: [
-      "Google Cloud Associate Cloud Engineer (ACE)",
-      "Build Infrastructure with Terraform on Google Cloud — Skill Badge",
-      "Implement Cloud Security Fundamentals on Google Cloud — Skill Badge",
-      "Modern Alternatives for Software Architecture",
-      "Leadership: Technology Management",
-      "Azure DevOps",
-      "API Development with Apigee",
-      "Microservices with Spring Cloud",
-      "SOLID Principles and Clean Code",
-      "Next.js: the React framework",
-      "MuleSoft 4 Fundamentals",
-      "PostgreSQL Server Tuning",
-      "Microservices with Spring",
-      "REST API and Docker",
-      "Oracle Certified Professional Java 6",
-    ],
+    certifications: {
+      featured: {
+        label: "Featured certification",
+        name: "Google Cloud Associate Cloud Engineer (ACE)",
+        issuer: "Google Cloud",
+        year: "[2026-2029]",
+        icon: "Google Cloud Platform (GCP)",
+      },
+      groups: [
+        {
+          id: "cloud",
+          label: "Cloud & DevOps",
+          items: [
+            {
+              name: "Build Infrastructure with Terraform on Google Cloud — Skill Badge",
+            },
+            {
+              name: "Implement Cloud Security Fundamentals on Google Cloud — Skill Badge",
+            },
+            { name: "Azure DevOps" },
+          ],
+        },
+        {
+          id: "integration",
+          label: "Integration & APIs",
+          items: [
+            { name: "API Development with Apigee" },
+            { name: "MuleSoft 4 Fundamentals" },
+            { name: "REST API and Docker" },
+          ],
+        },
+        {
+          id: "backend",
+          label: "Backend & Architecture",
+          items: [
+            { name: "Microservices with Spring Cloud" },
+            { name: "Microservices with Spring" },
+            { name: "PostgreSQL Server Tuning" },
+            { name: "SOLID Principles and Clean Code" },
+            { name: "Modern Alternatives for Software Architecture" },
+            { name: "Oracle Certified Professional Java 6" },
+          ],
+        },
+        {
+          id: "frontend",
+          label: "Frontend",
+          items: [{ name: "Next.js: the React framework" }],
+        },
+        {
+          id: "leadership",
+          label: "Leadership",
+          items: [{ name: "Leadership: Technology Management" }],
+        },
+      ],
+    },
     languages: [
       { name: "Spanish", level: "Native" },
       { name: "English", level: "Intermediate (B2)" },

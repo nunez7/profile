@@ -12,6 +12,7 @@ export const TECH_COLORS: Record<string, string> = {
 
   // Cloud
   "Google Cloud Platform (GCP)": "#4285f4",
+  "GCP": "#4285f4",
   "Terraform": "#7b42bc",
   "Vercel": "#8b949e",
 
@@ -31,6 +32,8 @@ export const TECH_COLORS: Record<string, string> = {
   "Thymeleaf": "#2e9e5b",
   "TypeScript": "#3178c6",
   "Tailwind CSS": "#06b6d4",
+  "JSP": "#e76f00",
+  "Java Servlets": "#e76f00",
 };
 
 /**
@@ -45,6 +48,18 @@ export const STACK_HUES: Record<string, string> = {
   backend: "var(--cat-backend)",
   frontend: "var(--cat-frontend)",
   practices: "var(--cat-practices)",
+};
+
+/**
+ * Hue de categoría para las certificaciones agrupadas. Liderazgo usa
+ * el verde de prácticas (no tiene categoría propia en el stack).
+ */
+export const CERT_GROUP_HUES: Record<string, string> = {
+  cloud: "var(--cat-cloud)",
+  integration: "var(--cat-integration)",
+  backend: "var(--cat-backend)",
+  frontend: "var(--cat-frontend)",
+  leadership: "var(--cat-practices)",
 };
 
 /**

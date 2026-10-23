@@ -20,7 +20,7 @@ export function TextLink({
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`press text-detail ${quiet ? "text-muted hover:text-foreground" : "text-foreground"} underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent ${className ?? ""}`}
+      className={`press tap-target inline-flex items-center text-detail ${quiet ? "text-muted hover:text-foreground" : "text-foreground"} underline decoration-rule underline-offset-4 transition-colors hover:decoration-accent ${className ?? ""}`}
     >
       {children}
     </a>

@@ -1,5 +1,6 @@
 import { LangProvider } from "@/i18n/lang-context";
 import { ThemeProvider } from "@/theme/theme-context";
+import { getYearsOfExperience } from "@/data/years";
 import CVPage from "@/components/CVPage";
 
 const personLd = {
@@ -34,7 +35,11 @@ const personLd = {
   ],
 };
 
-export default function Page() {
+export default async function Page() {
+  /* Server component: el año se resuelve en el build (scope cacheado)
+     y viaja como prop, así static HTML e hidratación no discrepan. */
+  const years = await getYearsOfExperience();
+
   return (
     <>
       <script
@@ -43,7 +48,7 @@ export default function Page() {
       />
       <LangProvider>
         <ThemeProvider>
-          <CVPage />
+          <CVPage years={years} />
         </ThemeProvider>
       </LangProvider>
     </>

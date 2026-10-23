@@ -1,6 +1,7 @@
 "use client";
 
 import { useLang } from "@/i18n/lang-context";
+import { getHeroKpis, withYears } from "@/data/resume";
 import { Container } from "./ui/Container";
 import { Panel } from "./ui/Panel";
 import { TextLink } from "./ui/TextLink";
@@ -13,8 +14,9 @@ const LINKEDIN_URL = "https://www.linkedin.com/in/felix-nunezg";
    la paleta semántica del sistema. */
 const KPI_HUES = ["var(--brand)", "var(--cat-backend)", "var(--cat-practices)"];
 
-export default function Hero() {
+export default function Hero({ years }: { years: number }) {
   const { t } = useLang();
+  const kpis = getHeroKpis(t, years);
 
   return (
     <section id="top" className="relative isolate pt-16 pb-14 md:pt-24 md:pb-20">
@@ -52,7 +54,7 @@ export default function Hero() {
               className="animate-rise mt-2 font-mono text-meta text-muted"
               style={{ animationDelay: "220ms" }}
             >
-              {t.hero.meta}
+              {withYears(t.hero.meta, years)}
             </p>
             <p className="mt-2 hidden font-mono text-meta text-muted print:block">
               {t.contact.email}
@@ -99,7 +101,7 @@ export default function Hero() {
               className="animate-rise mt-9 border-t border-rule sm:hidden"
               style={{ animationDelay: "380ms" }}
             >
-              {t.hero.kpis.map((kpi, i) => (
+              {kpis.map((kpi, i) => (
                 <div
                   key={kpi.label}
                   className="flex items-baseline justify-between gap-3 border-b border-rule py-2.5"
@@ -122,7 +124,7 @@ export default function Hero() {
               ))}
             </dl>
             <dl className="mt-9 hidden grid-cols-3 gap-3 sm:grid">
-              {t.hero.kpis.map((kpi, i) => (
+              {kpis.map((kpi, i) => (
                 <Panel
                   key={kpi.label}
                   flat
@@ -151,7 +153,7 @@ export default function Hero() {
 
           {/* Columna derecha: ventana profile.ts */}
           <div className="min-w-0">
-            <ProfileWindow />
+            <ProfileWindow years={years} />
           </div>
         </div>
       </Container>

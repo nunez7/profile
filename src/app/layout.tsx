@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Bricolage_Grotesque, IBM_Plex_Mono } from "next/font/google";
 import { SITE_NAME, SITE_URL } from "@/data/site";
+import { getYearsOfExperience } from "@/data/years";
 import "./globals.css";
 
 /* Display+body: grotesca con carácter (ejes ópticos, detalles
@@ -22,50 +23,54 @@ const plexMono = IBM_Plex_Mono({
 });
 
 /* Título y descripción viven en constantes: los comparten la metadata
-   base, Open Graph y Twitter Card, y así no se desincronizan. */
+   base, Open Graph y Twitter Card, y así no se desincronizan. Los años
+   vienen del mismo cálculo cacheado que el hero. */
 const TITLE = "Félix Núñez — Ingeniero IT & Lead Full Stack";
-const DESCRIPTION =
-  "Ingeniero IT & Lead Full Stack con +8 años de experiencia diseñando e integrando soluciones empresariales en la nube. Java, Spring Boot, GCP, MuleSoft, Apigee, Next.js y React.";
 
-export const metadata: Metadata = {
-  /* Necesario para resolver a URL absoluta el og:image que genera
-     src/app/opengraph-image.tsx. En Vercel sale de su propia variable. */
-  metadataBase: new URL(SITE_URL),
-  title: TITLE,
-  description: DESCRIPTION,
-  applicationName: SITE_NAME,
-  keywords: [
-    "Félix Núñez",
-    "Lead Full Stack",
-    "Ingeniero IT",
-    "Java",
-    "Spring Boot",
-    "GCP",
-    "MuleSoft",
-    "Apigee",
-    "Next.js",
-    "React",
-    "TypeScript",
-    "CV",
-  ],
-  authors: [{ name: "Félix Javier Núñez González" }],
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "profile",
-    locale: "es_MX",
-    siteName: SITE_NAME,
+export async function generateMetadata(): Promise<Metadata> {
+  const years = await getYearsOfExperience();
+  const description = `Ingeniero IT & Lead Full Stack con +${years} años de experiencia diseñando e integrando soluciones empresariales en la nube. Java, Spring Boot, GCP, MuleSoft, Apigee, Next.js y React.`;
+
+  return {
+    /* Necesario para resolver a URL absoluta el og:image que genera
+       src/app/opengraph-image.tsx. En Vercel sale de su propia variable. */
+    metadataBase: new URL(SITE_URL),
     title: TITLE,
-    description: DESCRIPTION,
-    url: "/",
-  },
-  /* La imagen se inyecta sola desde el file convention opengraph-image.tsx;
-     Twitter reutiliza og:image cuando no hay twitter:image. */
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
-};
+    description,
+    applicationName: SITE_NAME,
+    keywords: [
+      "Félix Núñez",
+      "Lead Full Stack",
+      "Ingeniero IT",
+      "Java",
+      "Spring Boot",
+      "GCP",
+      "MuleSoft",
+      "Apigee",
+      "Next.js",
+      "React",
+      "TypeScript",
+      "CV",
+    ],
+    authors: [{ name: "Félix Javier Núñez González" }],
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "profile",
+      locale: "es_MX",
+      siteName: SITE_NAME,
+      title: TITLE,
+      description,
+      url: "/",
+    },
+    /* La imagen se inyecta sola desde el file convention opengraph-image.tsx;
+       Twitter reutiliza og:image cuando no hay twitter:image. */
+    twitter: {
+      card: "summary_large_image",
+      title: TITLE,
+      description,
+    },
+  };
+}
 
 const themeInitScript = `try{var t=localStorage.getItem("cv-theme");var d=t==="dark"||((!t||t==="system")&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");}catch(e){}`;
 
