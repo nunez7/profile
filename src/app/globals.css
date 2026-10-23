@@ -21,6 +21,9 @@
   --background: #f1eff9; /* tinte lavanda cálido, no gris frío */
   --surface: #ffffff;
   --surface-elevated: #fcfbff;
+  /* Banda de sección: un paso entre papel y tarjeta. Marca el inicio
+     de una sección sin convertir la página en franjas blancas. */
+  --section-band: #f7f5fc;
   --foreground: #16142a; /* tinta índigo (AA sobre fondo y tarjeta) */
   --muted: #565170; /* 6.6:1 sobre --background */
   --rule: #dad6ec; /* hairlines, divisores */
@@ -70,6 +73,7 @@
   --background: #12101f;
   --surface: #1a1730;
   --surface-elevated: #221e3c;
+  --section-band: #161327;
   --foreground: #eceaf6;
   --muted: #a29dc0; /* 7.3:1 sobre --background */
   --rule: #2b2745;
@@ -125,6 +129,7 @@
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-elevated: var(--surface-elevated);
+  --color-section-band: var(--section-band);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-rule: var(--rule);
@@ -146,8 +151,15 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   text-rendering: optimizeLegibility;
-  /* Compensa la status bar fija para que no tape el contenido */
-  padding-bottom: 28px;
+  /* La status bar fija solo existe desde sm; en móvil se libera
+     también su reserva de altura. */
+  padding-bottom: 0;
+}
+
+@media (min-width: 40rem) {
+  body {
+    padding-bottom: 28px;
+  }
 }
 
 /* Scroll suave por anclas solo cuando el usuario no pide menos movimiento */
@@ -310,6 +322,27 @@ body {
   transform: none;
 }
 
+/* Sin JS no hay IntersectionObserver: el contenido nunca debe quedar
+   escondido esperando un scroll que no puede disparar el reveal. */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* El acordeón no puede abrirse sin JS: muestra el contenido completo
+     en vez de dejar puestos y bullets inaccesibles. */
+  .exp-panel {
+    grid-template-rows: 1fr !important;
+  }
+
+  .exp-panel li {
+    opacity: 1 !important;
+    translate: none !important;
+    transform: none !important;
+  }
+}
+
 /* Morph del icono de tema al conmutar */
 .theme-icon {
   transition:
@@ -426,6 +459,7 @@ body {
   :root {
     --panel-shadow: none;
     --elevated-shadow: none;
+    --section-band: #ffffff;
   }
 
   * {
@@ -438,6 +472,7 @@ body {
     --background: #ffffff;
     --surface: #ffffff;
     --surface-elevated: #ffffff;
+    --section-band: #ffffff;
     --foreground: #16142a;
     --muted: #565170;
     --rule: #dad6ec;

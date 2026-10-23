@@ -76,7 +76,7 @@ function Entry({
             </h3>
             {entry.head && (
               <span
-                className="rounded-[3px] border px-1.5 py-px font-mono text-[10px] tracking-tight"
+                className="rounded-[3px] border px-1.5 py-px font-mono text-[11px] tracking-tight"
                 style={{
                   borderColor: `color-mix(in oklab, ${companyColor} 40%, transparent)`,
                   backgroundColor: `color-mix(in oklab, ${companyColor} 12%, transparent)`,
@@ -177,7 +177,7 @@ export default function ExperienceTimeline() {
     userChoice === undefined ? (isNarrow ? null : 0) : userChoice;
 
   return (
-    <Section id="experience" title={t.sections.experience}>
+    <Section id="experience" title={t.sections.experience} tone="band">
       <div className="relative">
         <span aria-hidden className="exp-rail absolute left-[7px] top-3 bottom-3 w-px" />
         <ul className="relative flex flex-col gap-4 md:gap-5">

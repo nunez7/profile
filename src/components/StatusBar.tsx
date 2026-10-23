@@ -31,10 +31,10 @@ export default function StatusBar() {
   return (
     <div
       aria-hidden
-      className="no-print fixed inset-x-0 bottom-0 z-10 border-t border-rule bg-surface"
+      className="no-print fixed inset-x-0 bottom-0 z-10 hidden border-t border-rule bg-surface sm:block"
     >
       <div className="mx-auto flex h-7 w-full max-w-cv items-center justify-between px-6 md:px-10">
-        <div className="flex items-center gap-4 font-mono text-[11px] text-muted">
+        <div className="flex items-center gap-4 font-mono text-[12px] text-muted">
           <span className="flex items-center gap-1.5 text-muted">
             {GIT_BRANCH_ICON}
             {t.statusBar.branch}
@@ -42,7 +42,7 @@ export default function StatusBar() {
           <span className="hidden sm:inline">UTF-8</span>
           <span className="hidden md:inline">LF</span>
         </div>
-        <div className="flex items-center gap-4 font-mono text-[11px] text-muted">
+        <div className="flex items-center gap-4 font-mono text-[12px] text-muted">
           <span className="flex items-center gap-1.5">
             <span
               aria-hidden

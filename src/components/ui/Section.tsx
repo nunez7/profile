@@ -5,17 +5,22 @@ import { Container } from "./Container";
 export function Section({
   title,
   id,
+  tone = "default",
   children,
 }: {
   title: string;
   /** Ancla para el scrollspy/breadcrumb; reserva espacio bajo el header */
   id?: string;
+  /** `band` alterna la superficie para marcar el inicio de la sección. */
+  tone?: "default" | "band";
   children: ReactNode;
 }) {
   return (
     <section
       id={id}
-      className="scroll-mt-24 border-t border-rule py-14 md:py-20"
+      className={`scroll-mt-16 border-t border-rule py-14 md:py-20 ${
+        tone === "band" ? "bg-section-band" : ""
+      }`}
     >
       <Container>
         <h2 className="text-[25px] font-semibold tracking-[-0.02em] md:text-[31px]">

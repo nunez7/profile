@@ -15,9 +15,9 @@ const SECTION_IDS: SectionId[] = [
 ];
 
 /**
- * Breadcrumb de editor bajo el header: ruta `~/cv/<sección>.md` que
- * sigue el scroll + atajos a secciones en desktop. La ruta usa el
- * label localizado de cada sección (es contenido, vive en el dict).
+ * Ruta de editor dentro del header: `~/cv/<sección>.md` sigue el scroll.
+ * Los atajos de sección aparecen solo cuando hay ancho para ellos; en
+ * móvil basta la ruta activa para orientarse.
  */
 export default function Breadcrumb() {
   const { t } = useLang();
@@ -39,24 +39,27 @@ export default function Breadcrumb() {
     }
   };
 
-  const activeFile = activeId === "top" ? t.nav.home : fileFor(activeId as SectionId);
+  const activeFile =
+    activeId === "top" ? t.nav.home : fileFor(activeId as SectionId);
 
   return (
-    <nav
-      aria-label={t.nav.ariaLabel}
-      className="no-print border-t border-rule bg-background/95 backdrop-blur-sm"
-    >
-      <div className="mx-auto flex h-8 w-full max-w-cv items-center justify-between px-6 md:px-10">
+    <nav aria-label={t.nav.ariaLabel} className="min-w-0 flex-1">
+      <div className="flex min-w-0 items-center justify-between gap-4">
         {/* Ruta activa */}
-        <p className="flex items-center gap-1 font-mono text-[11px] text-muted">
-          <span aria-hidden>~/cv/</span>
-          <span className="text-accent" aria-current="location">
+        <p className="flex min-w-0 items-center gap-1 font-mono text-[12px] text-muted">
+          <span aria-hidden className="hidden shrink-0 sm:inline">
+            ~/cv/
+          </span>
+          <span
+            className="min-w-0 truncate text-accent"
+            aria-current="location"
+          >
             {activeFile}
           </span>
         </p>
 
-        {/* Atajos de sección (solo desktop; en mobile la ruta basta) */}
-        <ul className="hidden items-center gap-4 md:flex">
+        {/* Atajos de sección: solo cuando el header tiene ancho */}
+        <ul className="hidden shrink-0 items-center gap-3 lg:flex">
           {SECTION_IDS.map((id) => {
             const file = fileFor(id);
             const active = activeId === id;
@@ -65,16 +68,19 @@ export default function Breadcrumb() {
                 <a
                   href={`#${id}`}
                   aria-current={active ? "location" : undefined}
-                  className={`press font-mono text-[11px] transition-colors ${
+                  className={`press flex min-h-6 items-center gap-1 font-mono text-[12px] transition-colors ${
                     active
                       ? "text-foreground"
                       : "text-muted hover:text-foreground"
                   }`}
                 >
                   {file}
-                  <span aria-hidden className="text-accent">
-                    {active ? " ●" : ""}
-                  </span>
+                  {active && (
+                    <span
+                      aria-hidden
+                      className="inline-block size-1 rounded-full bg-accent"
+                    />
+                  )}
                 </a>
               </li>
             );

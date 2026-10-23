@@ -22,6 +22,12 @@ export function useScrollSpy(ids: string[], offset = 152) {
           current = id;
         }
       }
+      /* El footer puede quedar visible sin que su top cruce el umbral:
+         al llegar al final, la última sección es la activa. */
+      const documentHeight = document.documentElement.scrollHeight;
+      if (window.scrollY + window.innerHeight >= documentHeight - 2) {
+        current = ids[ids.length - 1] ?? current;
+      }
       setActiveId(current);
     };
 

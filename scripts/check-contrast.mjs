@@ -116,6 +116,7 @@ for (const [themeName, theme] of THEMES) {
     fondo: t("--background"),
     tarjeta: t("--surface"),
     elevado: t("--surface-elevated"),
+    banda: t("--section-band"),
   };
 
   // Texto: foreground y muted sobre cada capa de superficie

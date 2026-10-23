@@ -35,7 +35,10 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="contact" className="scroll-mt-24 border-t border-rule">
+    <footer
+      id="contact"
+      className="scroll-mt-16 border-t border-rule bg-section-band"
+    >
       <Container className="py-12 md:py-16">
         <h2 className="text-[25px] font-semibold tracking-[-0.02em] md:text-[31px]">
           {t.sections.contact}

@@ -23,9 +23,9 @@ export default function CVPage() {
         {t.nav.skip}
       </a>
       <Header />
-      <main id="main-content" className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1">
         <Hero />
-        <Section id="summary" title={t.sections.summary}>
+        <Section id="summary" title={t.sections.summary} tone="band">
           <div className="grid gap-7 lg:grid-cols-[minmax(0,1fr)_15rem] lg:items-start lg:gap-12">
             <p className="max-w-[58ch] text-body">{t.summary}</p>
             {/* Aside editorial: estado, ubicación y enfoque — cierra el

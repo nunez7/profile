@@ -2,16 +2,15 @@
 
 import { useLang } from "@/i18n/lang-context";
 import { STACK_HUES, TECH_COLORS } from "@/data/tech-colors";
-import { TECH_ICONS } from "@/data/tech-icons";
 import { Section } from "./ui/Section";
 import { Reveal } from "./ui/Reveal";
 import { Panel } from "./ui/Panel";
 
 /**
  * Stack como manifiesto de dependencias: cada grupo es un panel con
- * filas alineadas — icono de la tecnología en su color de marca,
- * nombre y su categoría (hue) como regla superior. Jerarquía:
- * grupos `primary` en lead. Cada tarjeta mide su contenido.
+ * filas alineadas. Un único marcador —punto de 9px en el color real de
+ * la tecnología, o el hue de la categoría cuando no hay color— y una
+ * sola escala tipográfica para las cinco categorías.
  */
 export default function Stack() {
   const { t } = useLang();
@@ -39,49 +38,18 @@ export default function Stack() {
                 </h3>
                 <ul>
                   {group.items.map((item) => {
-                    const color = TECH_COLORS[item];
-                    const icon = TECH_ICONS[item];
+                    const color = TECH_COLORS[item] ?? hue;
                     return (
                       <li
                         key={item}
                         className="flex items-center gap-2.5 border-b border-rule px-4 py-2 last:border-b-0"
                       >
-                        {icon ? (
-                          /* Icono de simple-icons tiñendo con el color
-                             de marca real de la tecnología */
-                          <svg
-                            aria-hidden
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            className="size-[14px] shrink-0"
-                            style={{ color: color ?? "var(--muted)" }}
-                          >
-                            <path d={icon} />
-                          </svg>
-                        ) : color ? (
-                          <span
-                            aria-hidden
-                            className="size-[9px] shrink-0 rounded-full"
-                            style={{ backgroundColor: color }}
-                          />
-                        ) : (
-                          /* Las prácticas no son «tecnología»: van sin
-                             icono ni punto, marcadas con un guión mono
-                             para alinear la columna */
-                          <span
-                            aria-hidden
-                            className="w-[9px] shrink-0 text-center font-mono text-meta text-rule"
-                          >
-                            —
-                          </span>
-                        )}
                         <span
-                          className={
-                            group.primary
-                              ? "text-lead font-medium tracking-[-0.01em]"
-                              : "text-detail text-muted"
-                          }
-                        >
+                          aria-hidden
+                          className="size-[9px] shrink-0 rounded-full"
+                          style={{ backgroundColor: color }}
+                        />
+                        <span className="text-detail font-medium tracking-[-0.005em] text-foreground">
                           {item}
                         </span>
                       </li>
