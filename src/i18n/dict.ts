@@ -366,22 +366,6 @@ export const dict: Record<Lang, Dict> = {
           ],
         },
         {
-          id: "backend",
-          label: "Backend & Arquitectura",
-          items: [
-            { name: "Microservicios con Spring Cloud" },
-            { name: "Microservicios con Spring" },
-            { name: "Tuning del servidor PostgreSQL" },
-            { name: "DBA Postgres", year: "2025" },
-            { name: "Principios SOLID y Clean Code" },
-            { name: "Patrones de diseño y SOLID", year: "2024" },
-            { name: "Spring Batch", year: "2024" },
-            { name: "JUnit & Mockito", year: "2024" },
-            { name: "Alternativas modernas para la Arquitectura de Software" },
-            { name: "Certificación Profesional en Java 6 — Oracle" },
-          ],
-        },
-        {
           id: "frontend",
           label: "Frontend",
           items: [
@@ -395,6 +379,22 @@ export const dict: Record<Lang, Dict> = {
           items: [
             { name: "IA Generativa", year: "2025" },
             { name: "n8n", year: "2025" },
+          ],
+        },
+        {
+          id: "backend",
+          label: "Backend & Arquitectura",
+          items: [
+            { name: "Microservicios con Spring Cloud" },
+            { name: "Microservicios con Spring" },
+            { name: "Tuning del servidor PostgreSQL" },
+            { name: "DBA Postgres", year: "2025" },
+            { name: "Principios SOLID y Clean Code" },
+            { name: "Patrones de diseño y SOLID", year: "2024" },
+            { name: "Spring Batch", year: "2024" },
+            { name: "JUnit & Mockito", year: "2024" },
+            { name: "Alternativas modernas para la Arquitectura de Software" },
+            { name: "Certificación Profesional en Java 6 — Oracle" },
           ],
         },
         {
@@ -651,22 +651,6 @@ export const dict: Record<Lang, Dict> = {
           ],
         },
         {
-          id: "backend",
-          label: "Backend & Architecture",
-          items: [
-            { name: "Microservices with Spring Cloud" },
-            { name: "Microservices with Spring" },
-            { name: "PostgreSQL Server Tuning" },
-            { name: "DBA Postgres", year: "2025" },
-            { name: "SOLID Principles and Clean Code" },
-            { name: "Design Patterns and SOLID", year: "2024" },
-            { name: "Spring Batch", year: "2024" },
-            { name: "JUnit & Mockito", year: "2024" },
-            { name: "Modern Alternatives for Software Architecture" },
-            { name: "Oracle Certified Professional Java 6" },
-          ],
-        },
-        {
           id: "frontend",
           label: "Frontend",
           items: [
@@ -680,6 +664,22 @@ export const dict: Record<Lang, Dict> = {
           items: [
             { name: "Generative AI", year: "2025" },
             { name: "n8n", year: "2025" },
+          ],
+        },
+        {
+          id: "backend",
+          label: "Backend & Architecture",
+          items: [
+            { name: "Microservices with Spring Cloud" },
+            { name: "Microservices with Spring" },
+            { name: "PostgreSQL Server Tuning" },
+            { name: "DBA Postgres", year: "2025" },
+            { name: "SOLID Principles and Clean Code" },
+            { name: "Design Patterns and SOLID", year: "2024" },
+            { name: "Spring Batch", year: "2024" },
+            { name: "JUnit & Mockito", year: "2024" },
+            { name: "Modern Alternatives for Software Architecture" },
+            { name: "Oracle Certified Professional Java 6" },
           ],
         },
         {
