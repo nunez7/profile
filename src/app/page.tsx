@@ -9,7 +9,7 @@ const personLd = {
   name: "Félix Javier Núñez González",
   jobTitle: "Ingeniero IT & Lead Full Stack",
   email: "mailto:felixjavier0@gmail.com",
-  telephone: "+52-323-104-52xx",
+  telephone: "+52-323-104-0000",
   url: "https://www.linkedin.com/in/felix-nunezg",
   address: {
     "@type": "PostalAddress",

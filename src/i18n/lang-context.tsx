@@ -10,6 +10,11 @@ import {
   type ReactNode,
 } from "react";
 import { dict, type Dict, type Lang } from "./dict";
+import { withViewTransition } from "@/components/ui/with-view-transition";
+import {
+  captureScrollAnchor,
+  restoreScrollAnchor,
+} from "@/components/ui/scroll-anchor";
 
 const STORAGE_KEY = "cv-lang";
 
@@ -44,7 +49,7 @@ type LangContextValue = {
 
 const LangContext = createContext<LangContextValue | null>(null);
 
-export function LangProvider({ children }: { children: ReactNode }) {
+export function LangProvider({ children }: Readonly<{ children: ReactNode }>) {
   const lang = useSyncExternalStore<Lang>(
     subscribe,
     readStoredLang,
@@ -55,9 +60,26 @@ export function LangProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  const setLang = useCallback((next: Lang) => {
-    storeLang(next);
-  }, []);
+  const setLang = useCallback(
+    (next: Lang) => {
+      /* Volver a pulsar el idioma activo no debe disparar un fundido. */
+      if (next === lang) return;
+
+      /* El cambio de idioma refluye todo el CV (títulos, roles, rutas):
+         lo cruzamos con una View Transition para que el reflujo no se
+         lea como un salto, y devolvemos el scroll al mismo punto de
+         lectura. Sin soporte o con reduced motion, directo. */
+      const anchor = captureScrollAnchor();
+      withViewTransition(
+        () => {
+          document.documentElement.lang = next;
+          storeLang(next);
+        },
+        () => restoreScrollAnchor(anchor),
+      );
+    },
+    [lang],
+  );
 
   const value = useMemo<LangContextValue>(
     () => ({

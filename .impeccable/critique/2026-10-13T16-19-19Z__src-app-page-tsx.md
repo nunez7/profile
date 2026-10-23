@@ -24,7 +24,7 @@ closed: true
 | 2 | Match sistema/mundo real | 4 | Léxico git siempre adyacente a texto llano |
 | 3 | Control y libertad | 4 | Toggles reversibles; nada irreversible |
 | 4 | Consistencia y estándares | 4 | Drift de radios: CTA/toggle 0px vs radio único 6px |
-| 5 | Prevención de errores | 3 | Footer renderiza `(+52) 323-104-52xx` como `tel:` funcional |
+| 5 | Prevención de errores | 3 | Footer renderiza `(+52) 323-104-0000` como `tel:` funcional |
 | 6 | Reconocimiento vs. recall | 4 | Todo visible |
 | 7 | Flexibilidad y eficiencia | 4 | Anclas, prefs, scrollspy |
 | 8 | Estética minimalista | 4 | KPIs apilados en móvil gastan ~280px verticales |
@@ -52,7 +52,7 @@ La ronda anterior se sostiene completa: elevación jerárquica, CTA indiscutible
 ## Priority Issues
 
 **[P1] El canal Teléfono está muerto al llegar**
-Por qué importa: Footer construye `tel:` desde `(+52) 323-104-52xx` (enmascarado en dict.ts) → enlace con `xx` no marca; canal presentado-y-roto es peor que omitido en Persuade.
+Por qué importa: Footer construye `tel:` desde `(+52) 323-104-0000` (enmascarado en dict.ts) → enlace con `xx` no marca; canal presentado-y-roto es peor que omitido en Persuade.
 Fix: número completo en dict (ES+EN) + Footer, o quitar `href` y dejar texto plano.
 Comando: harden
 

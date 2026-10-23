@@ -29,6 +29,7 @@ function Entry({
   /* Cada empresa tiñe su nodo, su hash y su badge HEAD — el grafo
      de git distingue de un vistazo quién es quién. */
   const companyColor = COMPANY_COLORS[entry.company] ?? "var(--brand)";
+  const panelId = `exp-panel-${entry.hash}`;
 
   return (
     <li
@@ -62,6 +63,7 @@ function Entry({
           type="button"
           onClick={onToggle}
           aria-expanded={open}
+          aria-controls={panelId}
           aria-label={toggleLabel()}
           className="press group block w-full cursor-pointer px-4 py-3.5 text-left md:px-5"
         >
@@ -137,6 +139,7 @@ function Entry({
             Entrada y salida asimétricas (260/200ms): abrir tarda en
             mostrar contenido, cerrar debe despejar la vista ya. */}
         <div
+          id={panelId}
           className={`exp-panel grid [transition-timing-function:var(--ease-out)] motion-reduce:transition-none ${
             open
               ? "grid-rows-[1fr] transition-[grid-template-rows] duration-[260ms]"
@@ -210,7 +213,10 @@ export default function ExperienceTimeline() {
         <ul className="relative flex flex-col gap-4 md:gap-5">
           {t.experience.map((entry, i) => (
             <Entry
-              key={`${entry.company}-${entry.role}`}
+              /* Hash estable entre idiomas: si la key dependiera del
+                 rol, cambiar ES/EN remontaría la entrada y reiniciaría
+                 su reveal (el snapshot nuevo saldría en blanco). */
+              key={entry.hash}
               entry={entry}
               index={i}
               open={openIdx === i}

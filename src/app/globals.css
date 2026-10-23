@@ -382,6 +382,15 @@ html {
   transition: transform 260ms var(--ease-out);
 }
 
+/* Indicador del breadcrumb: barra de 2px que se desliza entre los
+   archivos de sección. Se mueve con transform (compositor); el ancho
+   se resuelve con scaleX para no animar layout. */
+.nav-marker {
+  transition:
+    transform 220ms var(--ease-out),
+    opacity 140ms var(--ease-out);
+}
+
 /* Hover de tarjeta (solo Stack y Timeline): eleva un rung de sombra
    (`flat` → panel, sombra → elevated) y tiñe todo el borde con el hue
    de la categoría/empresa que Panel expone en `--panel-hue`. Solo
@@ -408,7 +417,11 @@ html {
    animar (cero parpadeo). La lista incluye transform/opacity para que
    el morph del icono de tema, el press y los revelados siga vivo
    durante la ventana; sin prefers-reduced-motion (el JS no añade la
-   clase y esta regla se apaga igual). */
+   clase y esta regla se apaga igual).
+   `box-shadow` queda fuera a propósito: en oscuro las sombras son
+   `inset` y en claro exteriores, y el navegador no interpola listas
+   distintas (saltaría a mitad del fundido). El cambio instantáneo de
+   sombra es imperceptible bajo el cruce de color. */
 @media (prefers-reduced-motion: no-preference) {
   .theme-transition,
   .theme-transition *,
@@ -421,7 +434,6 @@ html {
       color 250ms var(--ease-in-out),
       fill 250ms var(--ease-in-out),
       stroke 250ms var(--ease-in-out),
-      box-shadow 250ms var(--ease-in-out),
       background-image 250ms var(--ease-in-out),
       opacity 250ms var(--ease-in-out),
       transform 250ms var(--ease-in-out),
@@ -431,6 +443,52 @@ html {
        !important los aplana: durante el cambio de tema todo cruza
        a la vez — un solo fundido, no olas. */
     transition-delay: 0s !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Cambio de idioma: View Transition del navegador.
+   El dict cambia alturas (títulos, roles, rutas), así que el snapshot
+   viejo y el nuevo se cruzan con un fundido corto; el blur de entrada
+   funde las dos maquetaciones y evita que el reflujo se lea como un
+   salto. La clase `lang-transition` la pone with-view-transition y
+   solo existe durante el cambio; sin soporte o con reduced motion el
+   JS no la añade y el cambio es instantáneo.
+------------------------------------------------------------------ */
+::view-transition {
+  pointer-events: none;
+}
+
+html.lang-transition::view-transition-old(root) {
+  animation: vt-fade-out 160ms var(--ease-in-out) both;
+}
+
+html.lang-transition::view-transition-new(root) {
+  animation: vt-fade-in 220ms var(--ease-out) both;
+}
+
+/* El grupo (geometría del snapshot) dura lo mismo que la entrada;
+   sin esto la caja se queda 250ms por la animación por defecto. */
+html.lang-transition::view-transition-group(root) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out);
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
   }
 }
 
@@ -445,6 +503,20 @@ html {
 
   .name-underline {
     animation: none;
+  }
+
+  /* El indicador del nav conserva el fundido (ayuda a leer el cambio
+     de estado) pero no se desliza. */
+  .nav-marker {
+    transition: opacity 140ms ease;
+  }
+
+  /* Ninguna View Transition anima; el JS además ni la invoca. */
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
 
   .press,

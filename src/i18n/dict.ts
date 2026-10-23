@@ -392,7 +392,7 @@ export const dict: Record<Lang, Dict> = {
     ],
     contact: {
       email: "felixjavier0@gmail.com",
-      phone: "(+52) 323-104-52xx",
+      phone: "(+52) 323-104-0000",
       location: "Nayarit, México",
       linkedin: "linkedin.com/in/felix-nunezg",
     },
@@ -656,7 +656,7 @@ export const dict: Record<Lang, Dict> = {
     ],
     contact: {
       email: "felixjavier0@gmail.com",
-      phone: "323-104-52xx",
+      phone: "323-104-0000",
       location: "Nayarit, Mexico",
       linkedin: "linkedin.com/in/felix-nunezg",
     },
