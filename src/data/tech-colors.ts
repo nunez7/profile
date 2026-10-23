@@ -52,13 +52,15 @@ export const STACK_HUES: Record<string, string> = {
 
 /**
  * Hue de categoría para las certificaciones agrupadas. Liderazgo usa
- * el verde de prácticas (no tiene categoría propia en el stack).
+ * el verde de prácticas e IA comparte el violeta de cloud (no tienen
+ * categoría propia en el stack).
  */
 export const CERT_GROUP_HUES: Record<string, string> = {
   cloud: "var(--cat-cloud)",
   integration: "var(--cat-integration)",
   backend: "var(--cat-backend)",
   frontend: "var(--cat-frontend)",
+  ai: "var(--cat-cloud)",
   leadership: "var(--cat-practices)",
 };
 

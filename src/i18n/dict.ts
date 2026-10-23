@@ -159,7 +159,7 @@ export const dict: Record<Lang, Dict> = {
       kpis: [
         { label: "experiencia", value: "{years}+", unit: "años" },
         { label: "trayectoria", value: "3", unit: "roles" },
-        { label: "certificaciones", value: "15" },
+        { label: "certificaciones", value: "26" },
       ],
       code: {
         prompt: "cat profile.ts",
@@ -350,16 +350,19 @@ export const dict: Record<Lang, Dict> = {
             {
               name: "Implement Cloud Security Fundamentals on Google Cloud — Skill Badge",
             },
+            { name: "Desarrollo de software seguro", year: "2025" },
             { name: "Azure DevOps" },
+            { name: "Git", year: "2024" },
           ],
         },
         {
           id: "integration",
           label: "Integración & APIs",
           items: [
-            { name: "API Development with Apigee" },
+            { name: "API Development with Apigee", year: "2024" },
             { name: "MuleSoft 4 Fundamentals" },
             { name: "API REST y Docker" },
+            { name: "Integraciones con SQL Server", year: "2024" },
           ],
         },
         {
@@ -369,7 +372,11 @@ export const dict: Record<Lang, Dict> = {
             { name: "Microservicios con Spring Cloud" },
             { name: "Microservicios con Spring" },
             { name: "Tuning del servidor PostgreSQL" },
+            { name: "DBA Postgres", year: "2025" },
             { name: "Principios SOLID y Clean Code" },
+            { name: "Patrones de diseño y SOLID", year: "2024" },
+            { name: "Spring Batch", year: "2024" },
+            { name: "JUnit & Mockito", year: "2024" },
             { name: "Alternativas modernas para la Arquitectura de Software" },
             { name: "Certificación Profesional en Java 6 — Oracle" },
           ],
@@ -377,12 +384,26 @@ export const dict: Record<Lang, Dict> = {
         {
           id: "frontend",
           label: "Frontend",
-          items: [{ name: "Next.js: el framework de React" }],
+          items: [
+            { name: "Next.js: el framework de React" },
+            { name: "Angular Pro", year: "2025" },
+          ],
+        },
+        {
+          id: "ai",
+          label: "IA & Automatización",
+          items: [
+            { name: "IA Generativa", year: "2025" },
+            { name: "n8n", year: "2025" },
+          ],
         },
         {
           id: "leadership",
           label: "Liderazgo",
-          items: [{ name: "Liderazgo: Gerencia en Tecnología" }],
+          items: [
+            { name: "Liderazgo: Gerencia en Tecnología" },
+            { name: "Jira", year: "2024" },
+          ],
         },
       ],
     },
@@ -424,7 +445,7 @@ export const dict: Record<Lang, Dict> = {
       kpis: [
         { label: "experience", value: "{years}+", unit: "yrs" },
         { label: "trajectory", value: "3", unit: "roles" },
-        { label: "certifications", value: "15" },
+        { label: "certifications", value: "26" },
       ],
       code: {
         prompt: "cat profile.ts",
@@ -614,16 +635,19 @@ export const dict: Record<Lang, Dict> = {
             {
               name: "Implement Cloud Security Fundamentals on Google Cloud — Skill Badge",
             },
+            { name: "Secure Software Development", year: "2025" },
             { name: "Azure DevOps" },
+            { name: "Git", year: "2024" },
           ],
         },
         {
           id: "integration",
           label: "Integration & APIs",
           items: [
-            { name: "API Development with Apigee" },
+            { name: "API Development with Apigee", year: "2024" },
             { name: "MuleSoft 4 Fundamentals" },
             { name: "REST API and Docker" },
+            { name: "SQL Server Integrations", year: "2024" },
           ],
         },
         {
@@ -633,7 +657,11 @@ export const dict: Record<Lang, Dict> = {
             { name: "Microservices with Spring Cloud" },
             { name: "Microservices with Spring" },
             { name: "PostgreSQL Server Tuning" },
+            { name: "DBA Postgres", year: "2025" },
             { name: "SOLID Principles and Clean Code" },
+            { name: "Design Patterns and SOLID", year: "2024" },
+            { name: "Spring Batch", year: "2024" },
+            { name: "JUnit & Mockito", year: "2024" },
             { name: "Modern Alternatives for Software Architecture" },
             { name: "Oracle Certified Professional Java 6" },
           ],
@@ -641,12 +669,26 @@ export const dict: Record<Lang, Dict> = {
         {
           id: "frontend",
           label: "Frontend",
-          items: [{ name: "Next.js: the React framework" }],
+          items: [
+            { name: "Next.js: the React framework" },
+            { name: "Angular Pro", year: "2025" },
+          ],
+        },
+        {
+          id: "ai",
+          label: "AI & Automation",
+          items: [
+            { name: "Generative AI", year: "2025" },
+            { name: "n8n", year: "2025" },
+          ],
         },
         {
           id: "leadership",
           label: "Leadership",
-          items: [{ name: "Leadership: Technology Management" }],
+          items: [
+            { name: "Leadership: Technology Management" },
+            { name: "Jira", year: "2024" },
+          ],
         },
       ],
     },
